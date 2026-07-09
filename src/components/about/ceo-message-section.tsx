@@ -1,5 +1,6 @@
-import { Quote, UserRound } from 'lucide-react'
+import { Quote } from 'lucide-react'
 
+import ceoPhoto from '@/assets/ceo-sajid-janjua.png'
 import { Container } from '@/components/shared/container'
 import { Reveal } from '@/components/shared/reveal'
 import { Section } from '@/components/shared/section'
@@ -12,12 +13,15 @@ export function CeoMessageSection() {
         <div className="grid gap-10 lg:grid-cols-[320px_1fr] lg:gap-16">
           <Reveal className="lg:sticky lg:top-28 lg:self-start">
             <div className="mx-auto max-w-xs text-center lg:mx-0">
-              {/* TODO: Replace placeholder with the CEO's photo. */}
-              <div className="bg-gradient-brand relative flex aspect-square items-center justify-center overflow-hidden rounded-3xl shadow-lg">
-                <UserRound
-                  className="size-28 text-white/90"
-                  strokeWidth={1.25}
-                  aria-hidden="true"
+              <div className="relative aspect-square overflow-hidden rounded-3xl shadow-lg">
+                <img
+                  src={ceoPhoto}
+                  alt={`${leadership.name}, ${leadership.role}`}
+                  width={660}
+                  height={594}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover object-center"
                 />
               </div>
               <h3 className="mt-6 text-xl font-semibold">{leadership.name}</h3>

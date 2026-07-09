@@ -30,12 +30,12 @@ git push -u origin main
 
 ## 3. Environment Variables (Vercel → Settings → Environment Variables)
 
-| Variable             | Example                        | Notes                                             |
-| -------------------- | ------------------------------ | ------------------------------------------------- |
-| `RESEND_API_KEY`     | `re_xxxxxxxx`                  | From https://resend.com → API Keys                |
-| `CONTACT_TO_EMAIL`   | `info@lifecare.com`            | Where contact-form submissions are delivered      |
-| `CONTACT_FROM_EMAIL` | `website@nutriadd.com`         | **Must be a verified sender/domain in Resend**    |
-| `VITE_SITE_URL`      | `https://www.nutriadd.com`     | Your final public URL (used by sitemap + canonical) |
+| Variable             | Example                    | Notes                                               |
+| -------------------- | -------------------------- | --------------------------------------------------- |
+| `RESEND_API_KEY`     | `re_xxxxxxxx`              | From https://resend.com → API Keys                  |
+| `CONTACT_TO_EMAIL`   | `info@lifecare.com`        | Where contact-form submissions are delivered        |
+| `CONTACT_FROM_EMAIL` | `website@nutriadd.com`     | **Must be a verified sender/domain in Resend**      |
+| `VITE_SITE_URL`      | `https://www.nutriadd.com` | Your final public URL (used by sitemap + canonical) |
 
 > Set these for the **Production** (and Preview) environments, then redeploy so
 > `VITE_SITE_URL` is baked into the build.
@@ -70,8 +70,9 @@ git push -u origin main
 ## Pre-Launch Checklist
 
 ### Content & assets
-- [ ] Replace the CEO **name** and **photo** (`src/lib/data/company.ts`,
-      `src/components/about/ceo-message-section.tsx`).
+
+- [x] CEO **name** (Sajid M. Janjua) and **photo** added.
+- [x] Official **NutriAdd logo** integrated into navbar and footer.
 - [ ] Add the 9 real **principal/partner logos** (`principals-section.tsx`).
 - [ ] Replace **placeholder testimonials** (`src/lib/data/testimonials.ts`).
 - [ ] Replace **sample blog posts** (`src/lib/data/blog.ts`).
@@ -81,6 +82,7 @@ git push -u origin main
 - [ ] Have **Privacy Policy** and **Terms** reviewed by a professional.
 
 ### Technical
+
 - [ ] All environment variables set on Vercel.
 - [ ] Resend sending domain verified; test the contact form end-to-end.
 - [ ] `VITE_SITE_URL` matches the production domain.
@@ -91,5 +93,6 @@ git push -u origin main
 - [ ] Submit the sitemap in **Google Search Console**.
 
 ### Nice to have
+
 - [ ] Analytics (e.g. Vercel Analytics or Plausible).
 - [ ] A favicon set beyond the current SVG (PNG/ICO fallbacks).

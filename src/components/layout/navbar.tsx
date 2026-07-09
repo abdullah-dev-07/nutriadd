@@ -48,7 +48,7 @@ export function Navbar() {
             className="focus-visible:ring-ring rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="NutriAdd — Life Care, home"
           >
-            <Logo />
+            <Logo className="h-11 w-auto md:h-14" />
           </Link>
 
           <nav

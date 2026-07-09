@@ -30,8 +30,12 @@ export function Footer() {
       <Container className="py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:pr-6">
-            <Link to="/" aria-label="NutriAdd — Life Care, home">
-              <Logo theme="light" />
+            <Link
+              to="/"
+              aria-label="NutriAdd — Life Care, home"
+              className="inline-flex rounded-xl bg-white p-3 shadow-sm"
+            >
+              <Logo className="h-12 w-auto" />
             </Link>
             <p className="mt-5 max-w-xs text-sm leading-relaxed">
               {tagline}. Delivering trusted pharmaceutical, nutraceutical and

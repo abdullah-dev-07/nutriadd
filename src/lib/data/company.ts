@@ -1,7 +1,6 @@
 export const leadership = {
-  // TODO: Replace with the CEO's real name and photo once provided.
-  name: 'Our Chief Executive',
-  role: 'Founder & Chief Executive Officer',
+  name: 'Sajid M. Janjua',
+  role: 'Chief Executive Officer',
   message: [
     'The success and eminence of one man has been transformed into the dream of many. “We are Family”, and together we make the difference. We strive to accomplish our dreams, vision and goals — to get better, bigger, faster and stronger in the future.',
     'We strongly believe that coming together is a beginning, keeping together is progress, and working together is success. Our focus is to maintain our credibility and vigorously protect the reputation we have earned over 15 years through diligence, dedication and total commitment to our clients, using the most advanced technologies in pursuit of continued client satisfaction.',
