@@ -15,8 +15,6 @@ function createDevApiContactPlugin(): Plugin {
           return next()
         }
 
-        const host = req.headers.host ?? 'localhost:5173'
-        const url = `http://${host}${req.url}`
         const chunks: Uint8Array[] = []
 
         for await (const chunk of req) {
@@ -35,20 +33,10 @@ function createDevApiContactPlugin(): Plugin {
           }
         }
 
-        const request = new Request(url, {
-          method: req.method,
-          headers,
-          body: body.length ? body : undefined,
-        })
+        ;(req as IncomingMessage & { body?: unknown }).body = body.length ? body.toString('utf8') : ''
 
         const { default: handler } = await import('./api/contact.ts')
-        const response = await handler(request)
-
-        res.statusCode = response.status
-        response.headers.forEach((value, key) => {
-          res.setHeader(key, value)
-        })
-        res.end(await response.text())
+        await handler(req, res)
       })
     },
   }

@@ -1,3 +1,4 @@
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import { Resend } from 'resend'
 
 // NOTE: This validation is intentionally duplicated from
@@ -59,28 +60,50 @@ function hasErrors(errors: ContactFormErrors): boolean {
   return Object.keys(errors).length > 0
 }
 
-function jsonResponse(body: unknown, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
+type ContactRequest = IncomingMessage & { body?: unknown }
+
+type ContactResponse = ServerResponse
+
+function jsonResponse(res: ContactResponse, body: unknown, status: number): ContactResponse {
+  res.statusCode = status
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify(body))
+  return res
 }
 
-export default async function handler(request: Request): Promise<Response> {
-  if (request.method !== 'POST') {
-    return jsonResponse({ error: 'Method not allowed.' }, 405)
+function parsePayload(req: ContactRequest): ContactPayload {
+  const body = req.body
+
+  if (typeof body === 'string') {
+    return JSON.parse(body) as ContactPayload
+  }
+
+  if (Buffer.isBuffer(body)) {
+    return JSON.parse(body.toString('utf8')) as ContactPayload
+  }
+
+  if (body && typeof body === 'object') {
+    return body as ContactPayload
+  }
+
+  throw new Error('Invalid request body.')
+}
+
+export default async function handler(req: ContactRequest, res: ContactResponse) {
+  if (req.method !== 'POST') {
+    return jsonResponse(res, { error: 'Method not allowed.' }, 405)
   }
 
   let payload: ContactPayload
   try {
-    payload = (await request.json()) as ContactPayload
+    payload = parsePayload(req)
   } catch {
-    return jsonResponse({ error: 'Invalid request body.' }, 400)
+    return jsonResponse(res, { error: 'Invalid request body.' }, 400)
   }
 
   // Honeypot: silently accept bot submissions without sending anything.
   if (payload.company) {
-    return jsonResponse({ ok: true }, 200)
+    return jsonResponse(res, { ok: true }, 200)
   }
 
   const values: ContactFormValues = {
@@ -93,7 +116,7 @@ export default async function handler(request: Request): Promise<Response> {
 
   const errors = validateContactForm(values)
   if (hasErrors(errors)) {
-    return jsonResponse({ error: 'Validation failed.', errors }, 400)
+    return jsonResponse(res, { error: 'Validation failed.', errors }, 400)
   }
 
   const apiKey = process.env.RESEND_API_KEY
@@ -110,6 +133,7 @@ export default async function handler(request: Request): Promise<Response> {
       .join(', ')
     console.error(`Contact form misconfigured. Missing env vars: ${missing}`)
     return jsonResponse(
+      res,
       { error: `Email service is not configured (missing: ${missing}).` },
       500
     )
@@ -136,12 +160,12 @@ export default async function handler(request: Request): Promise<Response> {
     if (error) {
       console.error('Resend send error:', error)
       const detail = error.message ?? error.name ?? 'unknown error'
-      return jsonResponse({ error: `Email could not be sent: ${detail}` }, 502)
+      return jsonResponse(res, { error: `Email could not be sent: ${detail}` }, 502)
     }
 
-    return jsonResponse({ ok: true }, 200)
+    return jsonResponse(res, { ok: true }, 200)
   } catch (exception) {
     console.error('Contact handler exception:', exception)
-    return jsonResponse({ error: 'Failed to send message.' }, 500)
+    return jsonResponse(res, { error: 'Failed to send message.' }, 500)
   }
 }
