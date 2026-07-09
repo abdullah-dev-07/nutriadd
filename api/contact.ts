@@ -50,7 +50,18 @@ export default async function handler(request: Request): Promise<Response> {
   const from = process.env.CONTACT_FROM_EMAIL
 
   if (!apiKey || !to || !from) {
-    return jsonResponse({ error: 'Email service is not configured.' }, 500)
+    const missing = [
+      !apiKey && 'RESEND_API_KEY',
+      !to && 'CONTACT_TO_EMAIL',
+      !from && 'CONTACT_FROM_EMAIL',
+    ]
+      .filter(Boolean)
+      .join(', ')
+    console.error(`Contact form misconfigured. Missing env vars: ${missing}`)
+    return jsonResponse(
+      { error: `Email service is not configured (missing: ${missing}).` },
+      500
+    )
   }
 
   const resend = new Resend(apiKey)
@@ -72,11 +83,14 @@ export default async function handler(request: Request): Promise<Response> {
     })
 
     if (error) {
-      return jsonResponse({ error: 'Failed to send message.' }, 502)
+      console.error('Resend send error:', error)
+      const detail = error.message ?? error.name ?? 'unknown error'
+      return jsonResponse({ error: `Email could not be sent: ${detail}` }, 502)
     }
 
     return jsonResponse({ ok: true }, 200)
-  } catch {
+  } catch (exception) {
+    console.error('Contact handler exception:', exception)
     return jsonResponse({ error: 'Failed to send message.' }, 500)
   }
 }
