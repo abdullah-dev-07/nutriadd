@@ -1,0 +1,122 @@
+@import 'tailwindcss';
+
+/*
+  NutriAdd (Life Care) design tokens.
+  Brand palette derived from the logo: Life Green + Care Blue on Charcoal.
+  Light theme only — a clean, clinical corporate look.
+*/
+
+:root {
+  --radius: 0.75rem;
+
+  /* Raw brand palette */
+  --brand-green: #7ac043;
+  --brand-green-dark: #5a9e2f;
+  --brand-blue: #0072bc;
+  --brand-blue-dark: #005a96;
+  --charcoal: #231f20;
+  --slate: #4a5568;
+  --mist: #f5f8f4;
+
+  /* Semantic tokens (shadcn/ui contract) */
+  --background: #ffffff;
+  --foreground: #231f20;
+  --card: #ffffff;
+  --card-foreground: #231f20;
+  --popover: #ffffff;
+  --popover-foreground: #231f20;
+  --primary: #0072bc;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f8f4;
+  --secondary-foreground: #231f20;
+  --muted: #f5f8f4;
+  --muted-foreground: #4a5568;
+  --accent: #eef6e4;
+  --accent-foreground: #3f6f1f;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e6eae3;
+  --input: #e6eae3;
+  --ring: #0072bc;
+}
+
+@theme inline {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-dark: var(--brand-green-dark);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-dark: var(--brand-blue-dark);
+  --color-charcoal: var(--charcoal);
+  --color-slate: var(--slate);
+  --color-mist: var(--mist);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-charcoal;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    @apply outline-ring outline-2 outline-offset-2;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-brand {
+    @apply from-brand-green to-brand-blue bg-gradient-to-r;
+  }
+
+  .text-gradient-brand {
+    @apply from-brand-green to-brand-blue bg-gradient-to-r bg-clip-text text-transparent;
+  }
+
+  .container-px {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+}

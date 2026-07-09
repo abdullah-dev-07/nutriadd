@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NutriAdd">
+  <rect width="64" height="64" rx="14" fill="#ffffff" />
+  <path d="M32 8h8v16h16v8H40v16h-8V32H16v-8h16z" fill="#0072BC" />
+  <circle cx="24" cy="20" r="7" fill="#7AC043" />
+</svg>
