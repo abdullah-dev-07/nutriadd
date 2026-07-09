@@ -1,7 +1,7 @@
 import {
   Facebook,
   Instagram,
-  Linkedin,
+  MessageCircle,
   Mail,
   MapPin,
   Phone,
@@ -15,9 +15,21 @@ import { siteConfig } from '@/lib/site-config'
 import { Logo } from './logo'
 
 const socialLinks = [
-  { label: 'Facebook', href: '#', icon: Facebook },
-  { label: 'LinkedIn', href: '#', icon: Linkedin },
-  { label: 'Instagram', href: '#', icon: Instagram },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/sajid.janjua.14',
+    icon: Facebook,
+  },
+  {
+    label: 'WhatsApp',
+    href: 'https://wa.me/923008480844',
+    icon: MessageCircle,
+  },
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/sajidjanjua42?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
+    icon: Instagram,
+  },
 ]
 
 export function Footer() {
