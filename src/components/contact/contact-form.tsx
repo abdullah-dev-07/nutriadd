@@ -52,12 +52,14 @@ export function ContactForm() {
   const [errors, setErrors] = useState<ContactFormErrors>({})
   const [status, setStatus] = useState<Status>('idle')
   const [honeypot, setHoneypot] = useState('')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     const { name, value } = event.target
     setValues((previous) => ({ ...previous, [name]: value }))
+    setErrorMessage(null)
     setErrors((previous) => {
       if (!previous[name as keyof ContactFormValues]) return previous
       const next = { ...previous }
@@ -78,17 +80,33 @@ export function ContactForm() {
     }
 
     setStatus('submitting')
+    setErrorMessage(null)
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, company: honeypot }),
       })
-      if (!response.ok) throw new Error('Request failed')
+
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(
+          typeof result === 'object' && result !== null && 'error' in result
+            ? (result as { error: string }).error
+            : 'Request failed'
+        )
+      }
+
       setValues(initialValues)
       setStatus('success')
-    } catch {
+    } catch (error) {
       setStatus('error')
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong. Please try again or email us directly.'
+      )
     }
   }
 
@@ -182,10 +200,15 @@ export function ContactForm() {
           </p>
         )}
         {status === 'error' && (
-          <p className="bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium">
-            <TriangleAlert className="size-5 shrink-0" aria-hidden="true" />
-            Something went wrong. Please try again or email us directly.
-          </p>
+          <div className="bg-destructive/10 text-destructive rounded-lg px-4 py-3 text-sm font-medium">
+            <div className="flex items-center gap-2">
+              <TriangleAlert className="size-5 shrink-0" aria-hidden="true" />
+              <span>Something went wrong. Please try again or email us directly.</span>
+            </div>
+            {errorMessage ? (
+              <p className="mt-2 text-sm text-destructive/90">{errorMessage}</p>
+            ) : null}
+          </div>
         )}
       </div>
     </form>
