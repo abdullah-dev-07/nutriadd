@@ -26,6 +26,14 @@ import { type MediaItem } from '@/types/content'
  */
 export const promoMedia: MediaItem[] = [
   {
+    type: 'video',
+    src: '/promo/promo-video1.mp4',
+    poster: '/promo/promo-video1-poster.jpg',
+    alt: 'NutriAdd promotional video',
+    caption: 'Watch our latest promotional video',
+    fit: 'contain',
+  },
+  {
     type: 'image',
     src: '/promo/promo-magtein-imtiaz.png',
     alt: 'NutriAdd Magtein Magnesium L-Threonate — now available at Imtiaz stores across Pakistan',

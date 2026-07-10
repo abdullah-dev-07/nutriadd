@@ -5,12 +5,14 @@ type MediaItemViewProps = {
   item: MediaItem
   priority?: boolean
   className?: string
+  onPlayingChange?: (playing: boolean) => void
 }
 
 export function MediaItemView({
   item,
   priority = false,
   className,
+  onPlayingChange,
 }: MediaItemViewProps) {
   const fitClass = item.fit === 'contain' ? 'object-contain' : 'object-cover'
 
@@ -28,6 +30,9 @@ export function MediaItemView({
         playsInline
         preload={priority ? 'metadata' : 'none'}
         aria-label={item.alt}
+        onPlay={() => onPlayingChange?.(true)}
+        onPause={() => onPlayingChange?.(false)}
+        onEnded={() => onPlayingChange?.(false)}
       />
     )
   }

@@ -28,6 +28,7 @@ export function MediaCarousel({
   const shouldReduceMotion = useReducedMotion()
   const [[page, direction], setPage] = useState<[number, number]>([0, 0])
   const [isPaused, setIsPaused] = useState(false)
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   const count = items.length
   const activeIndex = count > 0 ? ((page % count) + count) % count : 0
@@ -47,9 +48,12 @@ export function MediaCarousel({
     [count]
   )
 
-  const isVideoActive = current?.type === 'video'
   const canAutoPlay =
-    autoPlay && count > 1 && !isPaused && !isVideoActive && !shouldReduceMotion
+    autoPlay && count > 1 && !isPaused && !isVideoPlaying && !shouldReduceMotion
+
+  useEffect(() => {
+    setIsVideoPlaying(false)
+  }, [activeIndex])
 
   useEffect(() => {
     if (!canAutoPlay) return
@@ -116,7 +120,7 @@ export function MediaCarousel({
               duration: shouldReduceMotion ? 0.3 : 0.55,
               ease: 'easeInOut',
             }}
-            drag={count > 1 ? 'x' : false}
+            drag={count > 1 && current.type !== 'video' ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.15}
             onDragEnd={(_, info) => {
@@ -125,7 +129,11 @@ export function MediaCarousel({
             }}
             className="absolute inset-0"
           >
-            <MediaItemView item={current} priority />
+            <MediaItemView
+              item={current}
+              priority
+              onPlayingChange={setIsVideoPlaying}
+            />
             {current.caption && (
               <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-5 pt-16 sm:p-7 sm:pt-20">
                 <p className="text-sm font-medium text-white sm:text-base">
