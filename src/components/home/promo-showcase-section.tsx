@@ -17,8 +17,8 @@ export function PromoShowcaseSection() {
           description="A closer look at our latest promotions, product launches and featured media."
         />
         <Reveal className="mt-14">
-          <div className="mx-auto max-w-5xl">
-            <MediaCarousel items={promoMedia} />
+          <div className="mx-auto max-w-2xl">
+            <MediaCarousel items={promoMedia} aspectClassName="aspect-square" />
           </div>
         </Reveal>
       </Container>

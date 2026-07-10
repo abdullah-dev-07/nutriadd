@@ -21,26 +21,24 @@ import { type MediaItem } from '@/types/content'
  *     // autoPlay: true, loop: true, muted: true, controls: false,
  *   }
  *
- * NOTE: The items below are branded placeholders. Replace them with real
- * promotional images and videos when available.
+ * `fit: 'contain'` shows the whole image without cropping (ideal for posters);
+ * omit it (defaults to 'cover') for full-bleed photos.
  */
 export const promoMedia: MediaItem[] = [
   {
     type: 'image',
-    src: '/promo/slide-1.svg',
-    alt: 'Featured campaign placeholder',
-    caption: 'Featured Campaign — highlight your latest promotion',
+    src: '/promo/promo-magtein-imtiaz.png',
+    alt: 'NutriAdd Magtein Magnesium L-Threonate — now available at Imtiaz stores across Pakistan',
+    caption:
+      'Magtein® Magnesium L-Threonate — now available at Imtiaz nationwide',
+    fit: 'contain',
   },
   {
     type: 'image',
-    src: '/promo/slide-2.svg',
-    alt: 'New product launch placeholder',
-    caption: 'New Product Launch — announce what’s new',
-  },
-  {
-    type: 'image',
-    src: '/promo/slide-3.svg',
-    alt: 'Brand promise placeholder',
-    caption: 'Caring for Healthy Life',
+    src: '/promo/promo-magtein-benefits.png',
+    alt: 'NutriAdd Magtein Magnesium L-Threonate benefits: crosses the blood-brain barrier, enhances cognitive function, protects brain health and improves sleep quality',
+    caption:
+      'Magtein® Magnesium L-Threonate — supports memory, sleep and cognitive function',
+    fit: 'contain',
   },
 ]
