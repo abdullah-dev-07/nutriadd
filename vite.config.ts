@@ -10,34 +10,38 @@ function createDevApiContactPlugin(): Plugin {
   return {
     name: 'dev-api-contact',
     configureServer(server: ViteDevServer) {
-      server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next) => {
-        if (req.method !== 'POST' || !req.url?.startsWith('/api/contact')) {
-          return next()
-        }
-
-        const chunks: Uint8Array[] = []
-
-        for await (const chunk of req) {
-          chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
-        }
-
-        const body = Buffer.concat(chunks)
-        const headers = new Headers()
-
-        for (const [key, value] of Object.entries(req.headers)) {
-          if (!value) continue
-          if (Array.isArray(value)) {
-            value.forEach((item) => headers.append(key, item))
-          } else {
-            headers.set(key, value)
+      server.middlewares.use(
+        async (req: IncomingMessage, res: ServerResponse, next) => {
+          if (req.method !== 'POST' || !req.url?.startsWith('/api/contact')) {
+            return next()
           }
+
+          const chunks: Uint8Array[] = []
+
+          for await (const chunk of req) {
+            chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+          }
+
+          const body = Buffer.concat(chunks)
+          const headers = new Headers()
+
+          for (const [key, value] of Object.entries(req.headers)) {
+            if (!value) continue
+            if (Array.isArray(value)) {
+              value.forEach((item) => headers.append(key, item))
+            } else {
+              headers.set(key, value)
+            }
+          }
+
+          ;(req as IncomingMessage & { body?: unknown }).body = body.length
+            ? body.toString('utf8')
+            : ''
+
+          const { default: handler } = await import('./api/contact.ts')
+          await handler(req, res)
         }
-
-        ;(req as IncomingMessage & { body?: unknown }).body = body.length ? body.toString('utf8') : ''
-
-        const { default: handler } = await import('./api/contact.ts')
-        await handler(req, res)
-      })
+      )
     },
   }
 }

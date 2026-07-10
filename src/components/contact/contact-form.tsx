@@ -203,10 +203,12 @@ export function ContactForm() {
           <div className="bg-destructive/10 text-destructive rounded-lg px-4 py-3 text-sm font-medium">
             <div className="flex items-center gap-2">
               <TriangleAlert className="size-5 shrink-0" aria-hidden="true" />
-              <span>Something went wrong. Please try again or email us directly.</span>
+              <span>
+                Something went wrong. Please try again or email us directly.
+              </span>
             </div>
             {errorMessage ? (
-              <p className="mt-2 text-sm text-destructive/90">{errorMessage}</p>
+              <p className="text-destructive/90 mt-2 text-sm">{errorMessage}</p>
             ) : null}
           </div>
         )}

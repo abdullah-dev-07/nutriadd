@@ -21,11 +21,30 @@ export type Principal = {
   category: string
 }
 
-export type Testimonial = {
-  quote: string
-  name: string
-  role: string
+export type MediaFit = 'cover' | 'contain'
+
+export type MediaImage = {
+  type: 'image'
+  src: string
+  alt: string
+  caption?: string
+  fit?: MediaFit
 }
+
+export type MediaVideo = {
+  type: 'video'
+  src: string
+  alt: string
+  poster?: string
+  caption?: string
+  fit?: MediaFit
+  autoPlay?: boolean
+  loop?: boolean
+  muted?: boolean
+  controls?: boolean
+}
+
+export type MediaItem = MediaImage | MediaVideo
 
 export type PostBlock =
   | { type: 'paragraph'; text: string }

@@ -64,7 +64,11 @@ type ContactRequest = IncomingMessage & { body?: unknown }
 
 type ContactResponse = ServerResponse
 
-function jsonResponse(res: ContactResponse, body: unknown, status: number): ContactResponse {
+function jsonResponse(
+  res: ContactResponse,
+  body: unknown,
+  status: number
+): ContactResponse {
   res.statusCode = status
   res.setHeader('Content-Type', 'application/json')
   res.end(JSON.stringify(body))
@@ -89,7 +93,10 @@ function parsePayload(req: ContactRequest): ContactPayload {
   throw new Error('Invalid request body.')
 }
 
-export default async function handler(req: ContactRequest, res: ContactResponse) {
+export default async function handler(
+  req: ContactRequest,
+  res: ContactResponse
+) {
   if (req.method !== 'POST') {
     return jsonResponse(res, { error: 'Method not allowed.' }, 405)
   }
@@ -160,7 +167,11 @@ export default async function handler(req: ContactRequest, res: ContactResponse)
     if (error) {
       console.error('Resend send error:', error)
       const detail = error.message ?? error.name ?? 'unknown error'
-      return jsonResponse(res, { error: `Email could not be sent: ${detail}` }, 502)
+      return jsonResponse(
+        res,
+        { error: `Email could not be sent: ${detail}` },
+        502
+      )
     }
 
     return jsonResponse(res, { ok: true }, 200)
