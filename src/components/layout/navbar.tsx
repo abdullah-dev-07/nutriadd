@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, ShoppingCart, User, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Container } from '@/components/shared/container'
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll'
 import { useScrolled } from '@/hooks/use-scrolled'
+import { useAuth } from '@/lib/auth/auth-context'
+import { useCart } from '@/lib/cart/cart-context'
 import { mainNav } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
 
@@ -17,6 +19,8 @@ const MENU_ID = 'primary-mobile-menu'
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const scrolled = useScrolled()
+  const { totalQuantity } = useCart()
+  const { user } = useAuth()
 
   useLockBodyScroll(open)
 
@@ -67,7 +71,32 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden items-center gap-4 md:flex">
+            <Link
+              to="/cart"
+              className="text-charcoal hover:text-brand-blue focus-visible:ring-ring relative rounded-md p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              aria-label={`Cart${totalQuantity > 0 ? `, ${totalQuantity} item${totalQuantity === 1 ? '' : 's'}` : ''}`}
+            >
+              <ShoppingCart className="size-6" aria-hidden="true" />
+              {totalQuantity > 0 && (
+                <span className="bg-brand-blue absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full text-[10px] font-semibold text-white">
+                  {totalQuantity > 9 ? '9+' : totalQuantity}
+                </span>
+              )}
+            </Link>
+
+            <Link
+              to={user ? '/account' : '/login'}
+              className="text-charcoal hover:text-brand-blue focus-visible:ring-ring rounded-md p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              aria-label={user ? 'My Account' : 'Log In'}
+            >
+              {user ? (
+                <User className="size-6" aria-hidden="true" />
+              ) : (
+                <span className="text-sm font-medium">Log In</span>
+              )}
+            </Link>
+
             <Button asChild variant="brand" size="sm">
               <Link to="/contact">Contact Us</Link>
             </Button>
@@ -119,6 +148,30 @@ export function Navbar() {
                     {item.label}
                   </NavLink>
                 ))}
+
+                <Link
+                  to="/cart"
+                  onClick={() => setOpen(false)}
+                  className="text-charcoal hover:bg-mist mt-1 flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium transition-colors"
+                >
+                  <ShoppingCart className="size-5" aria-hidden="true" />
+                  Cart
+                  {totalQuantity > 0 && (
+                    <span className="bg-brand-blue ml-auto flex size-5 items-center justify-center rounded-full text-xs font-semibold text-white">
+                      {totalQuantity > 9 ? '9+' : totalQuantity}
+                    </span>
+                  )}
+                </Link>
+
+                <Link
+                  to={user ? '/account' : '/login'}
+                  onClick={() => setOpen(false)}
+                  className="text-charcoal hover:bg-mist flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium transition-colors"
+                >
+                  <User className="size-5" aria-hidden="true" />
+                  {user ? 'My Account' : 'Log In'}
+                </Link>
+
                 <Button
                   asChild
                   variant="brand"

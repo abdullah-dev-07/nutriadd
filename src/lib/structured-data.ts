@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/site-config'
 import { type BlogPost } from '@/types/content'
+import { type Product } from '@/types/product'
 
 export function organizationSchema() {
   const { address, email, phones } = siteConfig.contact
@@ -36,5 +37,29 @@ export function blogPostingSchema(post: BlogPost, url: string) {
     },
     mainEntityOfPage: url,
     articleSection: post.category,
+  }
+}
+
+export function productSchema(product: Product, url: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.short_description,
+    sku: product.sku,
+    category: product.category.name,
+    url,
+    brand: { '@type': 'Organization', name: siteConfig.legalName },
+    offers: {
+      '@type': 'Offer',
+      url,
+      priceCurrency: product.currency,
+      price: product.price,
+      availability:
+        product.availability === 'in_stock'
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+      seller: { '@type': 'Organization', name: siteConfig.legalName },
+    },
   }
 }
