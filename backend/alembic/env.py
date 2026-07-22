@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 # Import the app's Base and models so Alembic's autogenerate can see all tables.
 from app.core.config import settings
-from app.db.base import Base
+from app.db.base import Base, build_connect_args
 import app.models  # noqa: F401  (registers all model classes on Base.metadata)
 
 # this is the Alembic Config object, which provides
@@ -48,10 +48,14 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
+    # Alembic builds its OWN engine here (separate from app.db.base.engine), so it
+    # must pass the same SSL connect_args or it will connect to Azure MySQL without
+    # TLS and be rejected with "Connections using insecure transport are prohibited".
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=build_connect_args(),
     )
 
     async with connectable.connect() as connection:
