@@ -40,7 +40,7 @@ Thumbs.db
 .eslintcache
 
 # Generated at build time
-public/sitemap.xml
+frontend/public/sitemap.xml
 
 # Uncompressed source media kept locally, never committed
 *.src.mp4

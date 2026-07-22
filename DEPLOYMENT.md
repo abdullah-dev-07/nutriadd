@@ -20,7 +20,7 @@ git push -u origin main
 
 1. Go to https://vercel.com → **Add New → Project**.
 2. Import the `nutriadd` GitHub repository.
-3. Vercel auto-detects the settings from `package.json`:
+3. This is a monorepo — under **Settings → General → Root Directory**, set it to `frontend`. Vercel then auto-detects the settings from `frontend/package.json`:
    - **Framework preset:** Vite
    - **Build command:** `pnpm build` (runs the sitemap generator first)
    - **Output directory:** `dist`
@@ -62,8 +62,8 @@ git push -u origin main
 3. Wait for DNS propagation; Vercel provisions **SSL (Let's Encrypt)**
    automatically.
 4. Update `VITE_SITE_URL` to the final domain and redeploy.
-5. Update `public/robots.txt` sitemap line and the default in
-   `src/lib/site-config.ts` if the domain differs from `www.nutriadd.com`.
+5. Update `frontend/public/robots.txt` sitemap line and the default in
+   `frontend/src/lib/site-config.ts` if the domain differs from `www.nutriadd.com`.
 
 ---
 
@@ -74,11 +74,11 @@ git push -u origin main
 - [x] CEO **name** (Sajid M. Janjua) and **photo** added.
 - [x] Official **NutriAdd logo** integrated into navbar and footer.
 - [ ] Add the 9 real **principal/partner logos** (`principals-section.tsx`).
-- [ ] Replace **placeholder testimonials** (`src/lib/data/testimonials.ts`).
-- [ ] Replace **sample blog posts** (`src/lib/data/blog.ts`).
+- [ ] Replace **placeholder testimonials** (`frontend/src/lib/data/testimonials.ts`).
+- [ ] Replace **sample blog posts** (`frontend/src/lib/data/blog.ts`).
 - [ ] Add the **product catalogue** (Products page currently "coming soon").
-- [ ] Add a **1200×630 `og-image.png`** to `public/` for social sharing.
-- [ ] Add real **social media links** (`src/components/layout/footer.tsx`).
+- [ ] Add a **1200×630 `og-image.png`** to `frontend/public/` for social sharing.
+- [ ] Add real **social media links** (`frontend/src/components/layout/footer.tsx`).
 - [ ] Have **Privacy Policy** and **Terms** reviewed by a professional.
 
 ### Technical

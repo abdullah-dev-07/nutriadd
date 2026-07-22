@@ -1,6 +1,6 @@
 # NutriAdd Backend
 
-FastAPI + PostgreSQL backend for the NutriAdd e-commerce product-showcase site. Consumed by the React SPA in the repo root over REST, all endpoints mounted under `/api/v1`.
+FastAPI + PostgreSQL backend for the NutriAdd e-commerce product-showcase site. Consumed by the React SPA in `frontend/` over REST, all endpoints mounted under `/api/v1`.
 
 ## Stack
 
@@ -109,46 +109,54 @@ Every error response has the shape `{"detail": "..."}`.
 
 ## Production deployment
 
-Architecture: **Vercel** (React/Vite frontend) → **Railway** (FastAPI backend, no Docker — Nixpacks builds it natively from `requirements.txt`) → **Neon** (managed serverless Postgres). Frontend and backend talk over plain HTTPS/REST, configured entirely through environment variables, so nothing above needs code changes to move from local dev to production.
+Architecture: **Vercel** (React/Vite frontend) → **Render** (FastAPI backend, no Docker — Render's native Python runtime builds it straight from `requirements.txt`) → **Neon** (managed serverless Postgres). Frontend and backend talk over plain HTTPS/REST, configured entirely through environment variables, so nothing above needs code changes to move from local dev to production.
 
 ### 1. Database — Neon
 
 1. Create a project at [neon.tech](https://neon.tech) (free tier is enough to start).
-2. Copy the connection string from the Neon dashboard. It looks like:
-   `postgresql://neondb_owner:xxxx@ep-xxxx.region.aws.neon.tech/neondb?sslmode=require`
+2. In the Neon dashboard's **Connection Details** widget, toggle **"Pooled connection"** ON, then copy the string. It looks like:
+   `postgresql://neondb_owner:xxxx@ep-xxxx-pooler.region.aws.neon.tech/neondb?sslmode=require`
+   (note the `-pooler` in the hostname — that's Neon's PgBouncer endpoint. Use the pooled string for the deployed app; it copes far better with a web service that opens/closes many short-lived connections and with Neon's autosuspend/resume than a direct connection would.)
 3. Adapt it for this app's async driver — change the scheme to `postgresql+asyncpg` and swap `sslmode=require` for `ssl=require` (asyncpg's query-param spelling):
-   `postgresql+asyncpg://neondb_owner:xxxx@ep-xxxx.region.aws.neon.tech/neondb?ssl=require`
-4. This becomes `DATABASE_URL` in Railway (step 2). Neon's free tier auto-suspends when idle and wakes on the next request — the first request after idle takes a bit longer, which is normal.
+   `postgresql+asyncpg://neondb_owner:xxxx@ep-xxxx-pooler.region.aws.neon.tech/neondb?ssl=require`
+4. This becomes the `DATABASE_URL` env var in Render (step 2). `app/db/base.py` already disables asyncpg's server-side prepared-statement cache automatically whenever it sees `postgresql+asyncpg` — this is required for the pooled/PgBouncer connection to work; you don't need to do anything extra for it.
+5. Neon's free tier auto-suspends the compute when idle and wakes on the next request — the first request after idle takes a bit longer, which is normal.
+6. For one-off tasks from your own machine (running Alembic migrations, the seed script), you can use either the pooled or the direct (non-`-pooler`) string — both work fine for short-lived local sessions.
 
-### 2. Backend — Railway
+### 2. Backend — Render
 
-1. Create a new Railway project → **Deploy from GitHub repo**, pick this repo.
-2. In the service's **Settings → Root Directory**, set it to `backend` (this is a monorepo — the frontend lives at the repo root). Railway's Nixpacks builder then auto-detects Python from `requirements.txt` and `.python-version`, and uses the `Procfile`'s `web:` line as the start command — no Dockerfile involved.
-3. Under **Variables**, set:
-   - `DATABASE_URL` — the Neon URL from step 1
+1. Go to [render.com](https://render.com) → **New → Web Service** → connect this GitHub repo.
+2. This repo includes `backend/render.yaml`, so Render should offer to use it as a **Blueprint** — accept that, or otherwise configure manually:
+   - **Root Directory:** `backend` (this is a monorepo — the frontend lives in `frontend/`)
+   - **Runtime:** Python 3
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Health Check Path:** `/health`
+3. Under **Environment**, set:
+   - `DATABASE_URL` — the pooled Neon URL from step 1
    - `JWT_SECRET_KEY` — generate with `python -c "import secrets; print(secrets.token_urlsafe(64))"`
    - `CORS_ORIGINS` — your Vercel URL(s), comma-separated, e.g. `https://nutriadd.vercel.app` (add your custom domain here later — no redeploy of code needed, just update this variable)
    - `ENVIRONMENT=production`
    - (`JWT_ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `REFRESH_TOKEN_EXPIRE_DAYS` are optional — sane defaults are baked in)
-   - Railway injects `PORT` automatically; the `Procfile` already binds to it.
-4. Deploy. Railway gives you a `*.up.railway.app` URL — copy it.
-5. Run the migrations and seed once against the new database, from your machine (with the venv active and `DATABASE_URL` pointed at Neon) or via `railway run`:
+   - Render injects `PORT` automatically; the start command already binds to it.
+4. Deploy. Render gives you a `*.onrender.com` URL — copy it.
+5. Run the migrations and seed once against the new database:
    ```bash
-   railway run alembic upgrade head
-   railway run python -m scripts.seed_products
+   alembic upgrade head
+   python -m scripts.seed_products
    ```
-   (Railway doesn't auto-run `release`-style processes — migrations must be triggered manually, which also gives you control over when schema changes actually land.)
-6. Verify: `https://<your-service>.up.railway.app/health` should return `{"status": "ok"}`, and `/docs` should load the interactive API docs.
+   Run this either from your own machine (venv active, `DATABASE_URL` pointed at Neon — direct or pooled, either works for a short-lived local session), or from Render's **Shell** tab on the service, which drops you into the deployed environment with its env vars already set. Render doesn't auto-run migrations on deploy — triggering them manually gives you control over when schema changes actually land. Note Render's free tier spins the service down after inactivity and takes ~30–60s to wake on the next request; that's expected.
+6. Verify: `https://<your-service>.onrender.com/health` should return `{"status": "ok"}`, and `/docs` should load the interactive API docs.
 
 ### 3. Frontend — Vercel
 
-1. Import this repo into Vercel (root directory stays the repo root — Vercel only sees the frontend files; `backend/` is irrelevant to the Vite build).
+1. Import this repo into Vercel and set **Settings → Root Directory** to `frontend` (this is a monorepo; `backend/` is irrelevant to the Vite build).
 2. Under **Settings → Environment Variables**, set:
-   - `VITE_API_URL` = `https://<your-railway-service>.up.railway.app/api/v1`
+   - `VITE_API_URL` = `https://<your-render-service>.onrender.com/api/v1`
    - `VITE_SITE_URL` = your Vercel URL (e.g. `https://nutriadd.vercel.app`)
    - `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` — for the existing `/api/contact` serverless function
 3. Deploy. Continue using the free `*.vercel.app` domain during development.
-4. **Custom domain later:** add it under **Settings → Domains** in Vercel, then update `VITE_SITE_URL` and add the new domain to Railway's `CORS_ORIGINS` — no code changes either side.
+4. **Custom domain later:** add it under **Settings → Domains** in Vercel, then update `VITE_SITE_URL` and add the new domain to Render's `CORS_ORIGINS` — no code changes either side.
 
 ### Extending this architecture
 

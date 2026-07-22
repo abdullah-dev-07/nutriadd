@@ -19,15 +19,29 @@ Corporate marketing website for **NutriAdd (Life Care)** — a Lahore-based phar
 | Deploy     | Vercel                                  |
 | Package    | pnpm                                    |
 
-## Getting started
+## Repo layout
+
+This is a monorepo with two independently deployed halves:
+
+```
+frontend/   React 19 + Vite SPA — deployed to Vercel (see below)
+backend/    FastAPI + PostgreSQL API — deployed to Railway (see backend/README.md)
+```
+
+They only talk to each other over HTTP (`VITE_API_URL` → the Railway backend URL); neither imports code from the other.
+
+## Getting started (frontend)
 
 ```bash
+cd frontend
 pnpm install
 cp .env.example .env   # fill in values (Phase 8+)
 pnpm dev
 ```
 
-## Scripts
+For the backend, see [backend/README.md](backend/README.md).
+
+## Scripts (run from `frontend/`)
 
 | Script           | Purpose                       |
 | ---------------- | ----------------------------- |
@@ -38,21 +52,22 @@ pnpm dev
 | `pnpm format`    | Format with Prettier          |
 | `pnpm typecheck` | Type-check without emitting   |
 
-## Project structure
+## Frontend project structure
 
 ```
-src/
-  assets/        Local images & logo
-  components/
-    ui/          shadcn/ui primitives (added on demand)
-    layout/      Navbar, Footer, Layout shell
-    home/        Homepage sections
-    shared/      Cross-page reusable pieces
-  pages/         Route-level pages
-  hooks/         Custom hooks
-  lib/           Utilities, constants, site config
-  types/         Shared TypeScript types
-  styles/        Global CSS & design tokens
-api/             Vercel serverless functions
-public/          Static assets (robots, sitemap, favicons)
+frontend/
+  src/
+    assets/        Local images & logo
+    components/
+      ui/          shadcn/ui primitives (added on demand)
+      layout/      Navbar, Footer, Layout shell
+      home/        Homepage sections
+      shared/      Cross-page reusable pieces
+    pages/         Route-level pages
+    hooks/         Custom hooks
+    lib/           Utilities, constants, site config
+    types/         Shared TypeScript types
+    styles/        Global CSS & design tokens
+  api/             Vercel serverless functions
+  public/          Static assets (robots, sitemap, favicons)
 ```
