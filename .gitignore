@@ -44,3 +44,11 @@ public/sitemap.xml
 
 # Uncompressed source media kept locally, never committed
 *.src.mp4
+
+# Backend (Python/FastAPI)
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+backend/.env
+.pytest_cache/
