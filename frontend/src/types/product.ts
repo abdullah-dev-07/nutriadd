@@ -37,6 +37,28 @@ export type ProductListParams = {
   page_size?: number
 }
 
+// Payload for admin create/update. Matches the backend ProductCreate/ProductUpdate
+// schemas. All fields are sent on create; update sends only changed fields.
+export type ProductInput = {
+  sku: string
+  slug: string
+  name: string
+  category_id: string
+  short_description: string
+  description: string
+  price: string
+  currency: string
+  availability: Availability
+  image_url: string
+  promo_image_url: string | null
+  tags: string[]
+  benefits: string[]
+  features: string[]
+  ingredients: string[] | null
+  usage_instructions: string | null
+  warnings: string | null
+}
+
 export type ProductListResponse = {
   items: Product[]
   total: number

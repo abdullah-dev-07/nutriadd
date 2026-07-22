@@ -48,6 +48,15 @@ async def upload_media(
 ) -> dict:
     """Upload an image / video / PDF to Azure Blob Storage and return its public URL.
     Generic enough to cover product images, promo media and future downloadable assets."""
+    allowed_containers = {
+        settings.AZURE_STORAGE_PRODUCT_CONTAINER,
+        settings.AZURE_STORAGE_PROMO_CONTAINER,
+    }
+    if container not in allowed_containers:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid container. Allowed: {sorted(allowed_containers)}",
+        )
     if file.content_type not in _ALLOWED_UPLOAD_TYPES:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,

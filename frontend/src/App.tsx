@@ -2,6 +2,7 @@ import { lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import { AppProviders } from '@/app-providers'
+import { AdminRoute } from '@/components/auth/admin-route'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 import { Layout } from '@/components/layout/layout'
 
@@ -20,6 +21,12 @@ const OrdersPage = lazy(() => import('@/pages/account/orders-page'))
 const OrderDetailPage = lazy(() => import('@/pages/account/order-detail-page'))
 const AddressesPage = lazy(() => import('@/pages/account/addresses-page'))
 const SettingsPage = lazy(() => import('@/pages/account/settings-page'))
+const AdminLayout = lazy(() => import('@/pages/admin/admin-layout'))
+const AdminProductsPage = lazy(() => import('@/pages/admin/admin-products-page'))
+const AdminProductFormPage = lazy(
+  () => import('@/pages/admin/admin-product-form-page')
+)
+const AdminMediaPage = lazy(() => import('@/pages/admin/admin-media-page'))
 const BlogPage = lazy(() => import('@/pages/blog-page'))
 const BlogPostPage = lazy(() => import('@/pages/blog-post-page'))
 const ContactPage = lazy(() => import('@/pages/contact-page'))
@@ -62,6 +69,22 @@ function App() {
               <Route path="orders/:id" element={<OrderDetailPage />} />
               <Route path="addresses" element={<AddressesPage />} />
               <Route path="settings" element={<SettingsPage />} />
+            </Route>
+            <Route
+              path="admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminProductsPage />} />
+              <Route path="products/new" element={<AdminProductFormPage />} />
+              <Route
+                path="products/:id/edit"
+                element={<AdminProductFormPage />}
+              />
+              <Route path="media" element={<AdminMediaPage />} />
             </Route>
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:slug" element={<BlogPostPage />} />

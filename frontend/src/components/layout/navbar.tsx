@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, ShoppingCart, User, X } from 'lucide-react'
+import { LayoutDashboard, Menu, ShoppingCart, User, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
@@ -84,6 +84,17 @@ export function Navbar() {
                 </span>
               )}
             </Link>
+
+            {user?.role === 'admin' && (
+              <Link
+                to="/admin"
+                className="text-charcoal hover:text-brand-blue focus-visible:ring-ring rounded-md p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                aria-label="Admin Dashboard"
+                title="Admin Dashboard"
+              >
+                <LayoutDashboard className="size-6" aria-hidden="true" />
+              </Link>
+            )}
 
             <Link
               to={user ? '/account' : '/login'}

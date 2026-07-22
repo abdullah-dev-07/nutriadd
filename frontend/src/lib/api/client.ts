@@ -94,3 +94,45 @@ export async function apiFetch<T>(
 
   return (await parseBody(response)) as T
 }
+
+/**
+ * Multipart/form-data upload (e.g. images/videos to Azure Blob Storage via the
+ * backend). Unlike apiFetch we must NOT set Content-Type — the browser sets it
+ * with the correct multipart boundary. Reuses the bearer token + refresh-on-401
+ * retry flow.
+ */
+export async function apiUpload<T>(
+  path: string,
+  formData: FormData,
+  options: { skipAuthRetry?: boolean } = {}
+): Promise<T> {
+  const requestHeaders: Record<string, string> = {}
+  const token = getAccessToken()
+  if (token) {
+    requestHeaders.Authorization = `Bearer ${token}`
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: 'POST',
+    headers: requestHeaders,
+    body: formData,
+  })
+
+  if (response.status === 401 && !options.skipAuthRetry && onUnauthorized) {
+    const newToken = await onUnauthorized()
+    if (newToken) {
+      return apiUpload<T>(path, formData, { skipAuthRetry: true })
+    }
+  }
+
+  if (!response.ok) {
+    const parsed = await parseBody(response)
+    const detail =
+      parsed && typeof parsed === 'object' && 'detail' in parsed
+        ? String((parsed as { detail: unknown }).detail)
+        : `Upload failed with status ${response.status}`
+    throw new ApiError(response.status, detail)
+  }
+
+  return (await parseBody(response)) as T
+}
