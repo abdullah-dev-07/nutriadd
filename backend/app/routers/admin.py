@@ -44,18 +44,23 @@ async def delete_product(product_id: uuid.UUID, db: AsyncSession = Depends(get_d
 @router.post("/media/upload", status_code=status.HTTP_201_CREATED)
 async def upload_media(
     file: UploadFile = File(...),
-    container: str = settings.AZURE_STORAGE_PRODUCT_CONTAINER,
+    target: str = "product",
 ) -> dict:
     """Upload an image / video / PDF to Azure Blob Storage and return its public URL.
-    Generic enough to cover product images, promo media and future downloadable assets."""
-    allowed_containers = {
-        settings.AZURE_STORAGE_PRODUCT_CONTAINER,
-        settings.AZURE_STORAGE_PROMO_CONTAINER,
+
+    `target` is a logical destination ("product" or "promo"), resolved here to the
+    actual container name from settings. The server is the single source of truth for
+    container names — the frontend never hardcodes them, so the real Azure container
+    names only need to be correct in the backend's .env."""
+    containers = {
+        "product": settings.AZURE_STORAGE_PRODUCT_CONTAINER,
+        "promo": settings.AZURE_STORAGE_PROMO_CONTAINER,
     }
-    if container not in allowed_containers:
+    container = containers.get(target)
+    if container is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid container. Allowed: {sorted(allowed_containers)}",
+            detail=f"Invalid target '{target}'. Allowed: {sorted(containers)}",
         )
     if file.content_type not in _ALLOWED_UPLOAD_TYPES:
         raise HTTPException(

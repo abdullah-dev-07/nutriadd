@@ -1,8 +1,9 @@
 """Azure Blob Storage wrapper.
 
 All product/promo/document media lives in Blob Storage; the database only ever
-stores the resulting HTTPS URLs (never binary data). Authentication uses the
-account connection string from settings.AZURE_STORAGE_CONNECTION_STRING.
+stores the resulting HTTPS URLs (never binary data). Authentication uses EITHER a
+full connection string (AZURE_STORAGE_CONNECTION_STRING) OR an account name + key
+(AZURE_STORAGE_ACCOUNT + AZURE_STORAGE_KEY).
 """
 from functools import lru_cache
 
@@ -14,12 +15,20 @@ from app.core.config import settings
 
 @lru_cache
 def _client() -> BlobServiceClient:
-    if not settings.AZURE_STORAGE_CONNECTION_STRING:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Azure Blob Storage is not configured (AZURE_STORAGE_CONNECTION_STRING is empty).",
-        )
-    return BlobServiceClient.from_connection_string(settings.AZURE_STORAGE_CONNECTION_STRING)
+    # Prefer a full connection string when provided.
+    if settings.AZURE_STORAGE_CONNECTION_STRING:
+        return BlobServiceClient.from_connection_string(settings.AZURE_STORAGE_CONNECTION_STRING)
+    # Otherwise authenticate with account name + shared key.
+    if settings.AZURE_STORAGE_ACCOUNT and settings.AZURE_STORAGE_KEY:
+        account_url = f"https://{settings.AZURE_STORAGE_ACCOUNT}.blob.core.windows.net"
+        return BlobServiceClient(account_url=account_url, credential=settings.AZURE_STORAGE_KEY)
+    raise HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail=(
+            "Azure Blob Storage is not configured. Set AZURE_STORAGE_CONNECTION_STRING, "
+            "or AZURE_STORAGE_ACCOUNT + AZURE_STORAGE_KEY."
+        ),
+    )
 
 
 def upload_file(container: str, blob_name: str, data: bytes, content_type: str) -> str:

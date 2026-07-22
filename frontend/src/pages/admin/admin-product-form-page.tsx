@@ -269,7 +269,7 @@ export default function AdminProductFormPage() {
               required
             />
             <MediaUpload
-              container="product-images"
+              target="product"
               accept="image/*"
               label="Upload product image"
               onUploaded={(url) => setField('image_url', url)}
@@ -293,7 +293,7 @@ export default function AdminProductFormPage() {
               placeholder="https://<account>.blob.core.windows.net/promo-media/…"
             />
             <MediaUpload
-              container="promo-media"
+              target="promo"
               accept="image/*,video/mp4"
               label="Upload promo image or video"
               onUploaded={(url) => setField('promo_image_url', url)}

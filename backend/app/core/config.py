@@ -18,7 +18,11 @@ class Settings(BaseSettings):
 
     # Azure Blob Storage — all product/promo/document media lives here; the DB only
     # ever stores the resulting HTTPS URLs, never binary data.
+    # Authenticate EITHER with a full connection string, OR with account name + key.
     AZURE_STORAGE_CONNECTION_STRING: str = ""
+    AZURE_STORAGE_ACCOUNT: str = ""
+    AZURE_STORAGE_KEY: str = ""
+    # These must match the real container names in your storage account.
     AZURE_STORAGE_PRODUCT_CONTAINER: str = "product-images"
     AZURE_STORAGE_PROMO_CONTAINER: str = "promo-media"
 

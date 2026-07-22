@@ -3,19 +3,19 @@ import { useState } from 'react'
 
 import { MediaUpload } from '@/components/admin/media-upload'
 import { Button } from '@/components/ui/button'
-import { type MediaContainer } from '@/lib/api/admin'
+import { type MediaTarget } from '@/lib/api/admin'
 
 type UploadedItem = {
   url: string
-  container: MediaContainer
+  target: MediaTarget
 }
 
 export default function AdminMediaPage() {
   const [items, setItems] = useState<UploadedItem[]>([])
   const [copied, setCopied] = useState<string | null>(null)
 
-  function addItem(container: MediaContainer, url: string) {
-    setItems((prev) => [{ url, container }, ...prev])
+  function addItem(target: MediaTarget, url: string) {
+    setItems((prev) => [{ url, target }, ...prev])
   }
 
   async function copy(url: string) {
@@ -46,22 +46,22 @@ export default function AdminMediaPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="border-border space-y-3 rounded-2xl border bg-white p-5">
           <h3 className="text-charcoal font-medium">Product images</h3>
-          <p className="text-slate text-sm">Container: product-images</p>
+          <p className="text-slate text-sm">Stored in the product container</p>
           <MediaUpload
-            container="product-images"
+            target="product"
             accept="image/*"
             label="Upload product image"
-            onUploaded={(url) => addItem('product-images', url)}
+            onUploaded={(url) => addItem('product', url)}
           />
         </div>
         <div className="border-border space-y-3 rounded-2xl border bg-white p-5">
           <h3 className="text-charcoal font-medium">Promo images &amp; videos</h3>
-          <p className="text-slate text-sm">Container: promo-media</p>
+          <p className="text-slate text-sm">Stored in the promo container</p>
           <MediaUpload
-            container="promo-media"
+            target="promo"
             accept="image/*,video/mp4"
             label="Upload promo image or video"
-            onUploaded={(url) => addItem('promo-media', url)}
+            onUploaded={(url) => addItem('promo', url)}
           />
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function AdminMediaPage() {
                   />
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="text-slate text-xs">{item.container}</p>
+                  <p className="text-slate text-xs">{item.target}</p>
                   <p className="text-charcoal truncate text-sm" title={item.url}>
                     {item.url}
                   </p>

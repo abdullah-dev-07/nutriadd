@@ -82,10 +82,10 @@ async def test_admin_endpoints_reject_non_admin(client: AsyncClient, db_session:
     assert resp.status_code == 403
 
 
-async def test_admin_media_upload_rejects_bad_container(client: AsyncClient, db_session: AsyncSession) -> None:
+async def test_admin_media_upload_rejects_bad_target(client: AsyncClient, db_session: AsyncSession) -> None:
     headers = await _admin_headers(client, db_session, "admin2@example.com")
     resp = await client.post(
-        "/api/v1/admin/media/upload?container=evil-container",
+        "/api/v1/admin/media/upload?target=evil",
         headers=headers,
         files={"file": ("x.png", b"\x89PNG", "image/png")},
     )

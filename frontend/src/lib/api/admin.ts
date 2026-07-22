@@ -1,8 +1,12 @@
 import { apiFetch, apiUpload } from '@/lib/api/client'
 import { type Product, type ProductInput } from '@/types/product'
 
-/** Container names must match the backend's AZURE_STORAGE_*_CONTAINER settings. */
-export type MediaContainer = 'product-images' | 'promo-media'
+/**
+ * Logical upload destination. The backend maps this to the real Azure container
+ * (AZURE_STORAGE_PRODUCT_CONTAINER / AZURE_STORAGE_PROMO_CONTAINER), so the frontend
+ * never needs to know the actual container names.
+ */
+export type MediaTarget = 'product' | 'promo'
 
 export function createProduct(payload: ProductInput) {
   return apiFetch<Product>('/admin/products', {
@@ -26,13 +30,13 @@ export function deleteProduct(id: string) {
 
 /**
  * Upload an image or video to Azure Blob Storage (via the backend) and get its
- * public URL back. `container` picks the destination: product-images or promo-media.
+ * public URL back. `target` picks the destination: 'product' or 'promo'.
  */
-export function uploadMedia(file: File, container: MediaContainer) {
+export function uploadMedia(file: File, target: MediaTarget) {
   const formData = new FormData()
   formData.append('file', file)
   return apiUpload<{ url: string }>(
-    `/admin/media/upload?container=${encodeURIComponent(container)}`,
+    `/admin/media/upload?target=${encodeURIComponent(target)}`,
     formData
   )
 }

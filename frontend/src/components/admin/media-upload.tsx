@@ -2,11 +2,11 @@ import { CheckCircle2, Loader2, TriangleAlert, Upload } from 'lucide-react'
 import { useRef, useState, type ChangeEvent } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { uploadMedia, type MediaContainer } from '@/lib/api/admin'
+import { uploadMedia, type MediaTarget } from '@/lib/api/admin'
 import { ApiError } from '@/lib/api/client'
 
 type MediaUploadProps = {
-  container: MediaContainer
+  target: MediaTarget
   accept?: string
   label?: string
   onUploaded: (url: string) => void
@@ -17,7 +17,7 @@ type MediaUploadProps = {
  * via the backend, and returns the public URL through onUploaded.
  */
 export function MediaUpload({
-  container,
+  target,
   accept = 'image/*',
   label = 'Upload file',
   onUploaded,
@@ -35,7 +35,7 @@ export function MediaUpload({
     setStatus('uploading')
     setMessage(null)
     try {
-      const { url } = await uploadMedia(file, container)
+      const { url } = await uploadMedia(file, target)
       onUploaded(url)
       setStatus('done')
       setMessage(`Uploaded ${file.name}`)
