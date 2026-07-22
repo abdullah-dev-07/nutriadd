@@ -1,3 +1,4 @@
+import json
 from functools import lru_cache
 from typing import List
 
@@ -11,7 +12,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Database
+    # Database (Neon Postgres in production — include "?ssl=require" in the URL)
     DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/nutriadd"
 
     # JWT
@@ -20,12 +21,22 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
-    # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:5173"]
+    # CORS — accepts either a JSON array ("[\"https://a.com\",\"https://b.com\"]")
+    # or a plain comma-separated string ("https://a.com,https://b.com"), so it's
+    # easy to paste into Railway's env var UI without worrying about JSON quoting.
+    CORS_ORIGINS: str = "http://localhost:5173"
+
+    @property
+    def cors_origins_list(self) -> List[str]:
+        stripped = self.CORS_ORIGINS.strip()
+        if stripped.startswith("["):
+            return json.loads(stripped)
+        return [origin.strip() for origin in stripped.split(",") if origin.strip()]
 
     # App
     PROJECT_NAME: str = "NutriAdd API"
     API_V1_PREFIX: str = "/api/v1"
+    ENVIRONMENT: str = "development"
 
 
 @lru_cache
