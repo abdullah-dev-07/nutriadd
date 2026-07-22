@@ -21,9 +21,10 @@ async def _seed_two_products(db_session: AsyncSession) -> None:
         short_description="Magnesium L-Threonate for brain health, calmness and better sleep.",
         description="Full description",
         price="2500.00",
-        image_key="magtein",
+        image_url="https://example.blob.core.windows.net/product-images/magtein.jpeg",
         tags=["brain health", "magnesium"],
         benefits=["Memory & Mood Support"],
+        features=[],
     )
     p2 = Product(
         sku="NA-CLI-30",
@@ -33,9 +34,10 @@ async def _seed_two_products(db_session: AsyncSession) -> None:
         short_description="Magnesium & Omega3 for a balanced you.",
         description="Full description",
         price="2200.00",
-        image_key="climag",
+        image_url="https://example.blob.core.windows.net/product-images/climag.jpeg",
         tags=["magnesium", "omega3"],
         benefits=["Promotes Deep Sleep"],
+        features=[],
     )
     db_session.add_all([p1, p2])
     await db_session.commit()

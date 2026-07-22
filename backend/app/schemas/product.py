@@ -18,9 +18,14 @@ class ProductBase(BaseModel):
     price: Decimal
     currency: str = "PKR"
     availability: Availability = Availability.in_stock
-    image_key: str
+    image_url: str
+    promo_image_url: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
     benefits: List[str] = Field(default_factory=list)
+    features: List[str] = Field(default_factory=list)
+    ingredients: Optional[List[str]] = None
+    usage_instructions: Optional[str] = None
+    warnings: Optional[str] = None
 
 
 class ProductCreate(ProductBase):
@@ -37,9 +42,14 @@ class ProductUpdate(BaseModel):
     price: Optional[Decimal] = None
     currency: Optional[str] = None
     availability: Optional[Availability] = None
-    image_key: Optional[str] = None
+    image_url: Optional[str] = None
+    promo_image_url: Optional[str] = None
     tags: Optional[List[str]] = None
     benefits: Optional[List[str]] = None
+    features: Optional[List[str]] = None
+    ingredients: Optional[List[str]] = None
+    usage_instructions: Optional[str] = None
+    warnings: Optional[str] = None
 
 
 class ProductRead(BaseModel):
@@ -55,9 +65,14 @@ class ProductRead(BaseModel):
     price: Decimal
     currency: str
     availability: Availability
-    image_key: str
+    image_url: str
+    promo_image_url: Optional[str] = None
     tags: List[str]
     benefits: List[str]
+    features: List[str]
+    ingredients: Optional[List[str]] = None
+    usage_instructions: Optional[str] = None
+    warnings: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 

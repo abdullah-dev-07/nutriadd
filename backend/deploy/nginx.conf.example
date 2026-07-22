@@ -1,0 +1,48 @@
+# Nginx reverse proxy for the NutriAdd FastAPI backend.
+#
+# Install:
+#   sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/nutriadd
+#   sudo ln -s /etc/nginx/sites-available/nutriadd /etc/nginx/sites-enabled/nutriadd
+#   sudo nginx -t && sudo systemctl reload nginx
+#
+# Replace api.example.com with your real backend domain (or use the VM's public IP
+# for initial testing). Once the domain's DNS points at the VM, run:
+#   sudo certbot --nginx -d api.example.com
+# Certbot rewrites this file to add the :443 TLS server block and an HTTP->HTTPS
+# redirect, and installs a systemd timer that auto-renews the certificate.
+
+upstream nutriadd_backend {
+    # Must match `bind` in deploy/gunicorn_conf.py.
+    server unix:/run/nutriadd/gunicorn.sock;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name api.example.com;
+
+    # Don't advertise the Nginx version.
+    server_tokens off;
+
+    # Allow large-ish uploads for product images / promo videos routed through the API.
+    client_max_body_size 25m;
+
+    location / {
+        proxy_pass http://nutriadd_backend;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_connect_timeout 30s;
+        proxy_read_timeout    60s;
+    }
+
+    # Lightweight health check endpoint (also used by uptime monitors).
+    location = /health {
+        proxy_pass http://nutriadd_backend;
+        access_log off;
+    }
+}

@@ -29,9 +29,15 @@ class Product(Base):
     availability: Mapped[Availability] = mapped_column(
         Enum(Availability, native_enum=False, length=20), default=Availability.in_stock, nullable=False
     )
-    image_key: Mapped[str] = mapped_column(String(255), nullable=False)
+    # Azure Blob Storage URLs — the DB never stores binary media, only these links.
+    image_url: Mapped[str] = mapped_column(String(1024), nullable=False)
+    promo_image_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     tags: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
     benefits: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    features: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    ingredients: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    usage_instructions: Mapped[str | None] = mapped_column(Text, nullable=True)
+    warnings: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False

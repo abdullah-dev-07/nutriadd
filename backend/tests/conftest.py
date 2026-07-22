@@ -93,9 +93,10 @@ async def create_category_and_product(
         description="Full description here.",
         price=price,
         currency="PKR",
-        image_key=product_slug,
+        image_url="https://example.blob.core.windows.net/product-images/magtein.jpeg",
         tags=["brain health"],
         benefits=["Memory Support"],
+        features=[],
     )
     db_session.add(product)
     await db_session.commit()

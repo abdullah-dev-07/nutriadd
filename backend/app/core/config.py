@@ -12,8 +12,15 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Database (Neon Postgres in production — include "?ssl=require" in the URL)
-    DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/nutriadd"
+    # Database — Azure Database for MySQL Flexible Server in production.
+    # TLS is enforced automatically whenever the host isn't localhost (see app/db/base.py).
+    DATABASE_URL: str = "mysql+aiomysql://user:password@localhost:3306/nutriadd"
+
+    # Azure Blob Storage — all product/promo/document media lives here; the DB only
+    # ever stores the resulting HTTPS URLs, never binary data.
+    AZURE_STORAGE_CONNECTION_STRING: str = ""
+    AZURE_STORAGE_PRODUCT_CONTAINER: str = "product-images"
+    AZURE_STORAGE_PROMO_CONTAINER: str = "promo-media"
 
     # JWT
     JWT_SECRET_KEY: str = "change-me-in-production"
@@ -23,7 +30,7 @@ class Settings(BaseSettings):
 
     # CORS — accepts either a JSON array ("[\"https://a.com\",\"https://b.com\"]")
     # or a plain comma-separated string ("https://a.com,https://b.com"), so it's
-    # easy to paste into Railway's env var UI without worrying about JSON quoting.
+    # easy to set in a plain .env file on the VM without worrying about JSON quoting.
     CORS_ORIGINS: str = "http://localhost:5173"
 
     @property

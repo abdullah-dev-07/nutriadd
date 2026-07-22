@@ -5,19 +5,41 @@ Run from the `backend/` directory with the virtualenv active:
     python -m scripts.seed_products
 
 Safe to re-run: categories and products are upserted by their unique `slug`.
+
+Media handling:
+- If AZURE_STORAGE_CONNECTION_STRING is configured, each product's local image
+  (frontend/src/assets/<slug>.<ext>) and promo image (frontend/public/promo/
+  promo-<slug>.jpeg) are uploaded to Azure Blob Storage and the resulting HTTPS
+  URLs are stored on the product (the DB never stores binary data).
+- If Azure is NOT configured (e.g. local development), the product's `slug` is
+  stored as a placeholder in `image_url` and `promo_image_url` is left null; the
+  frontend falls back to its bundled asset matched by slug, so the catalog still
+  renders locally without Azure.
+
+Product copy (name/description/benefits/tags/features/ingredients) is transcribed
+from the promotional artwork in frontend/public/promo/. No usage instructions or
+warnings are printed on that artwork, so those fields are intentionally null.
 """
 import asyncio
 import logging
+import mimetypes
+from pathlib import Path
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.db.base import AsyncSessionLocal
 from app.models.category import Category
 from app.models.product import Product
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("seed_products")
+
+# Repo root = backend/scripts/seed_products.py -> backend -> repo root.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+ASSETS_DIR = REPO_ROOT / "frontend" / "src" / "assets"
+PROMO_DIR = REPO_ROOT / "frontend" / "public" / "promo"
 
 CATEGORIES = [
     {"name": "Brain & Cognitive Health", "slug": "brain-cognitive-health"},
@@ -35,6 +57,8 @@ PRODUCTS = [
         "name": "Magtein — Magnesium L-Threonate",
         "category_slug": "brain-cognitive-health",
         "price": "2500.00",
+        "image_file": "magtein.jpeg",
+        "promo_file": "promo-magtein.jpeg",
         "short_description": "Magnesium L-Threonate for brain health, calmness and better sleep.",
         "description": (
             "Magtein is a Gold Standard nutritional supplement featuring Magnesium L-Threonate — "
@@ -51,6 +75,15 @@ PRODUCTS = [
             "Supports Cognitive Function",
             "Overall Brain Wellness",
         ],
+        "features": [
+            "Gold Standard Nutritional Supplement",
+            "High Bioavailability",
+            "Crosses the blood-brain barrier",
+            "500mg · 30 Tablets",
+        ],
+        "ingredients": ["Magnesium L-Threonate (500mg)"],
+        "usage_instructions": None,
+        "warnings": None,
     },
     {
         "slug": "climag",
@@ -58,6 +91,8 @@ PRODUCTS = [
         "name": "Climag — Magnesium & Omega3 Glycinate",
         "category_slug": "sleep-relaxation",
         "price": "2200.00",
+        "image_file": "climag.jpeg",
+        "promo_file": "promo-climag.jpeg",
         "short_description": "Magnesium & Omega3 for a balanced you — improved sleep and relaxation.",
         "description": (
             "Climag combines Magnesium Glycinate with Omega-3 — the perfect combination for relaxation, "
@@ -73,6 +108,14 @@ PRODUCTS = [
             "Supports Bone Health & Strength",
             "Supports Overall Wellbeing",
         ],
+        "features": [
+            "Magnesium Glycinate + Omega-3 combination",
+            "Improved Sleep & Relaxation",
+            "30 Tablets",
+        ],
+        "ingredients": ["Magnesium Glycinate", "Omega-3"],
+        "usage_instructions": None,
+        "warnings": None,
     },
     {
         "slug": "kal-3",
@@ -80,6 +123,8 @@ PRODUCTS = [
         "name": "Kal-3 Plus — K2 & Calcium",
         "category_slug": "bone-joint-health",
         "price": "1800.00",
+        "image_file": "kal-3.jpeg",
+        "promo_file": "promo-kal-3.jpeg",
         "short_description": "K2 + Calcium for stronger bones and an active life.",
         "description": (
             "Kal-3 Plus brings together Vitamin K2 (100mcg) and Calcium (1000mg) — the perfect combination "
@@ -96,6 +141,13 @@ PRODUCTS = [
             "Supports Immune System",
             "Promotes Daily Energy & Vitality",
         ],
+        "features": [
+            "Vitamin K2 (100mcg) + Calcium (1000mg)",
+            "Reduces muscle cramps & stiffness",
+        ],
+        "ingredients": ["Vitamin K2 (100mcg)", "Calcium (1000mg)"],
+        "usage_instructions": None,
+        "warnings": None,
     },
     {
         "slug": "nisavit",
@@ -103,6 +155,8 @@ PRODUCTS = [
         "name": "Nisavit — L-Methyl Folate & Vitamin B6, B12",
         "category_slug": "womens-health-energy",
         "price": "1600.00",
+        "image_file": "nisavit.jpeg",
+        "promo_file": "promo-nisavit.jpeg",
         "short_description": "The power of active folate for a healthier you.",
         "description": (
             "Nisavit delivers the active form of Folate along with Vitamin B6 and B12 for better absorption "
@@ -118,6 +172,14 @@ PRODUCTS = [
             "Promotes Heart & Homocysteine Health",
             "Supports Healthy Pregnancy & Foetal Development",
         ],
+        "features": [
+            "Active form of Folate (L-Methyl Folate)",
+            "With Vitamin B6 & B12 for better absorption",
+            "60 Tablets",
+        ],
+        "ingredients": ["L-Methyl Folate", "Vitamin B6", "Vitamin B12"],
+        "usage_instructions": None,
+        "warnings": None,
     },
     {
         "slug": "trig",
@@ -125,6 +187,8 @@ PRODUCTS = [
         "name": "Trig — Magnesium Glycinate & Vitamin B12, E, K2",
         "category_slug": "energy-wellness",
         "price": "2000.00",
+        "image_file": "trig.jpeg",
+        "promo_file": "promo-trig.jpeg",
         "short_description": "Magnesium + Vitamins for energy, brain & overall wellness.",
         "description": (
             "Trig is a stronger combination of Magnesium Glycinate with Vitamins B12, E and K2 — formulated "
@@ -140,6 +204,14 @@ PRODUCTS = [
             "Supports Immune System",
             "Supports Healthy Skin, Hair & Eyes",
         ],
+        "features": [
+            "Magnesium Glycinate + Vitamin B12, E & K2",
+            "Stronger combination for energy & cognitive function",
+            "30 Tablets",
+        ],
+        "ingredients": ["Magnesium Glycinate", "Vitamin B12", "Vitamin E", "Vitamin K2"],
+        "usage_instructions": None,
+        "warnings": None,
     },
     {
         "slug": "vikin-d",
@@ -147,6 +219,8 @@ PRODUCTS = [
         "name": "Vikin-D — D3 + K2",
         "category_slug": "bone-joint-health",
         "price": "1900.00",
+        "image_file": "vikin-d.jpeg",
+        "promo_file": "promo-vikin-d.jpeg",
         "short_description": "Essential D3 + K2 for daily wellness.",
         "description": (
             "Vikin-D combines high-strength Vitamin D3 (10,000 IU) with Vitamin K2 (100mcg) for better "
@@ -163,6 +237,14 @@ PRODUCTS = [
             "Supports Cardiovascular & Brain Health",
             "Supports Immune System Health",
         ],
+        "features": [
+            "Vitamin D3 (10,000 IU) + Vitamin K2 (100mcg)",
+            "Double Strength & Extra Support",
+            "30 Tablets",
+        ],
+        "ingredients": ["Vitamin D3 (10,000 IU)", "Vitamin K2 (100mcg)"],
+        "usage_instructions": None,
+        "warnings": None,
     },
     {
         "slug": "qazplus",
@@ -170,6 +252,8 @@ PRODUCTS = [
         "name": "Qaz Plus — Multivitamins & Minerals",
         "category_slug": "energy-immunity",
         "price": "1700.00",
+        "image_file": "qazplus.png",
+        "promo_file": "promo-qazplus.jpeg",
         "short_description": "Your daily dose of essential vitamins, minerals & energy support nutrients.",
         "description": (
             "Qaz Plus is a complete multivitamin and mineral formula with Ginseng Extract, Vitamin A, Zinc, "
@@ -185,8 +269,55 @@ PRODUCTS = [
             "Supports Metabolism & Vitality",
             "Supports Overall Wellbeing",
         ],
+        "features": [
+            "Multivitamins & Minerals with Ginseng Extract, L-Carnitine, L-Arginine & Co-Q10",
+            "A True Energy Booster",
+        ],
+        "ingredients": [
+            "Ginseng Extract",
+            "Vitamin A",
+            "Zinc",
+            "L-Carnitine",
+            "L-Arginine",
+            "Co-Q10",
+        ],
+        "usage_instructions": None,
+        "warnings": None,
     },
 ]
+
+_azure_enabled = bool(settings.AZURE_STORAGE_CONNECTION_STRING)
+
+
+def _resolve_media_urls(data: dict) -> tuple[str, str | None]:
+    """Return (image_url, promo_image_url). Uploads to Azure Blob Storage when
+    configured; otherwise returns a slug placeholder so local dev still works."""
+    if not _azure_enabled:
+        return data["slug"], None
+
+    # Imported lazily so the script doesn't require azure-storage-blob for the
+    # local, no-Azure path.
+    from app.services import storage_service
+
+    storage_service.ensure_container(settings.AZURE_STORAGE_PRODUCT_CONTAINER)
+    storage_service.ensure_container(settings.AZURE_STORAGE_PROMO_CONTAINER)
+
+    image_path = ASSETS_DIR / data["image_file"]
+    promo_path = PROMO_DIR / data["promo_file"]
+
+    image_url = storage_service.upload_file(
+        settings.AZURE_STORAGE_PRODUCT_CONTAINER,
+        data["image_file"],
+        image_path.read_bytes(),
+        mimetypes.guess_type(image_path.name)[0] or "application/octet-stream",
+    )
+    promo_url = storage_service.upload_file(
+        settings.AZURE_STORAGE_PROMO_CONTAINER,
+        data["promo_file"],
+        promo_path.read_bytes(),
+        mimetypes.guess_type(promo_path.name)[0] or "application/octet-stream",
+    )
+    return image_url, promo_url
 
 
 async def upsert_category(db: AsyncSession, data: dict) -> Category:
@@ -207,6 +338,8 @@ async def upsert_product(db: AsyncSession, data: dict, category_id) -> None:
     result = await db.execute(select(Product).where(Product.slug == data["slug"]))
     product = result.scalar_one_or_none()
 
+    image_url, promo_image_url = _resolve_media_urls(data)
+
     fields = dict(
         sku=data["sku"],
         name=data["name"],
@@ -215,9 +348,14 @@ async def upsert_product(db: AsyncSession, data: dict, category_id) -> None:
         description=data["description"],
         price=data["price"],
         currency="PKR",
-        image_key=data["slug"],
+        image_url=image_url,
+        promo_image_url=promo_image_url,
         tags=data["tags"],
         benefits=data["benefits"],
+        features=data["features"],
+        ingredients=data["ingredients"],
+        usage_instructions=data["usage_instructions"],
+        warnings=data["warnings"],
     )
 
     if product is None:
@@ -231,6 +369,13 @@ async def upsert_product(db: AsyncSession, data: dict, category_id) -> None:
 
 
 async def seed() -> None:
+    if not _azure_enabled:
+        logger.warning(
+            "AZURE_STORAGE_CONNECTION_STRING not set — seeding with slug placeholders "
+            "for images (frontend uses bundled assets as a fallback). Set it to upload "
+            "media to Azure Blob Storage."
+        )
+
     async with AsyncSessionLocal() as db:
         categories_by_slug = {}
         for cat_data in CATEGORIES:

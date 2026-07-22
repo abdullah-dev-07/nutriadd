@@ -17,7 +17,7 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group border-border flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
       <Link to={href} className="bg-mist relative block aspect-square overflow-hidden">
         <img
-          src={getProductImage(product.image_key)}
+          src={getProductImage(product.image_url, product.slug)}
           alt={product.name}
           loading="lazy"
           className="size-full object-contain p-6 transition-transform duration-300 group-hover:scale-105"

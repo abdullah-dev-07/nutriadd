@@ -17,6 +17,14 @@ export const productImages: Record<string, string> = {
   qazplus,
 }
 
-export function getProductImage(imageKey: string): string {
-  return productImages[imageKey] ?? nutriaddLogo
+/**
+ * Resolve the image to display for a product. In production the API returns an
+ * absolute Azure Blob Storage URL, which is used directly. When that URL is empty
+ * (e.g. local dev before Blob Storage is wired up) we fall back to the bundled
+ * asset matched by slug, and finally to the NutriAdd logo.
+ */
+export function getProductImage(imageUrl: string, slug?: string): string {
+  if (imageUrl && /^https?:\/\//.test(imageUrl)) return imageUrl
+  if (slug && productImages[slug]) return productImages[slug]
+  return nutriaddLogo
 }

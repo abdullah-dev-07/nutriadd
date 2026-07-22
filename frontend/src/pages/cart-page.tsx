@@ -59,7 +59,7 @@ export default function CartPage() {
                       className="bg-mist size-20 shrink-0 overflow-hidden rounded-xl"
                     >
                       <img
-                        src={getProductImage(item.imageKey)}
+                        src={getProductImage(item.imageUrl, item.slug)}
                         alt={item.name}
                         loading="lazy"
                         className="size-full object-contain p-2"

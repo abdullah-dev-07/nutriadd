@@ -139,7 +139,7 @@ export default function ProductDetailPage() {
 
   const inStock = product.availability === 'in_stock'
   const productPath = `/products/${product.slug}`
-  const productImage = getProductImage(product.image_key)
+  const productImage = getProductImage(product.image_url, product.slug)
 
   return (
     <>

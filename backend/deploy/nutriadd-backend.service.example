@@ -1,0 +1,40 @@
+# systemd unit for the NutriAdd FastAPI backend (Gunicorn + Uvicorn workers).
+#
+# Install:
+#   sudo cp deploy/nutriadd-backend.service.example /etc/systemd/system/nutriadd-backend.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now nutriadd-backend
+#
+# Adjust User/Group and the two paths below if you deploy somewhere other than
+# /opt/nutriadd with a dedicated "nutriadd" system user.
+
+[Unit]
+Description=NutriAdd FastAPI backend (Gunicorn/Uvicorn)
+After=network.target
+
+[Service]
+Type=notify
+User=nutriadd
+Group=nutriadd
+
+# Absolute path to the repository's backend directory on the VM.
+WorkingDirectory=/opt/nutriadd/backend
+
+# Loads DATABASE_URL, JWT_SECRET_KEY, AZURE_STORAGE_CONNECTION_STRING, CORS_ORIGINS, etc.
+EnvironmentFile=/opt/nutriadd/backend/.env
+
+# Creates /run/nutriadd (owned by the service user) for the Gunicorn Unix socket,
+# and recreates it automatically after a reboot.
+RuntimeDirectory=nutriadd
+RuntimeDirectoryMode=0750
+
+ExecStart=/opt/nutriadd/backend/.venv/bin/gunicorn app.main:app -c deploy/gunicorn_conf.py
+
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

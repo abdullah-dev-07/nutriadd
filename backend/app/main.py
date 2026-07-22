@@ -1,11 +1,14 @@
 import logging
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.deps import get_db
 from app.routers import admin, auth, categories, contact, orders, products
 
 logger = logging.getLogger(__name__)
@@ -51,7 +54,34 @@ def create_app() -> FastAPI:
 
     @app.get("/health", tags=["health"])
     async def health() -> dict:
+        """Liveness probe — confirms the process is up. Used by systemd/Nginx/uptime
+        monitors; intentionally does no I/O so it stays fast and never flaps on a
+        transient DB blip."""
         return {"status": "ok"}
+
+    @app.get("/health/ready", tags=["health"])
+    async def readiness(db: AsyncSession = Depends(get_db)) -> JSONResponse:
+        """Readiness probe — verifies the app can actually reach its dependencies.
+        Returns 200 when the database is reachable, 503 otherwise, plus the Blob
+        Storage configuration status. Use this to validate production connectivity."""
+        checks: dict[str, str] = {}
+        try:
+            await db.execute(text("SELECT 1"))
+            checks["database"] = "ok"
+            db_ok = True
+        except Exception:
+            logger.exception("Readiness check: database is unreachable")
+            checks["database"] = "error"
+            db_ok = False
+
+        checks["blob_storage"] = (
+            "configured" if settings.AZURE_STORAGE_CONNECTION_STRING else "not_configured"
+        )
+
+        return JSONResponse(
+            status_code=status.HTTP_200_OK if db_ok else status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={"status": "ready" if db_ok else "not_ready", "checks": checks},
+        )
 
     return app
 

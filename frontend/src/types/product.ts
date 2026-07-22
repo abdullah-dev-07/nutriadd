@@ -17,9 +17,14 @@ export type Product = {
   price: number
   currency: string
   availability: Availability
-  image_key: string
+  image_url: string
+  promo_image_url: string | null
   tags: string[]
   benefits: string[]
+  features: string[]
+  ingredients: string[] | null
+  usage_instructions: string | null
+  warnings: string | null
   created_at: string
   updated_at: string
 }
