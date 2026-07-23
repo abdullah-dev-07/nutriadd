@@ -17,6 +17,26 @@ logger = logging.getLogger(__name__)
 def create_app() -> FastAPI:
     app = FastAPI(title=settings.PROJECT_NAME)
 
+    # NOTE ON MIDDLEWARE ORDER: middleware registered LAST ends up OUTERMOST.
+    # This catch-all is registered BEFORE CORSMiddleware so it sits *inside* it —
+    # otherwise unhandled errors are turned into 500s by Starlette's
+    # ServerErrorMiddleware, which runs outside CORSMiddleware and therefore
+    # returns a response with no Access-Control-Allow-Origin header. The browser
+    # then blocks it and the frontend sees an opaque "Load failed"/"Failed to fetch"
+    # instead of the real error. Catching here keeps CORS headers on 500s.
+    @app.middleware("http")
+    async def catch_unhandled_errors(request: Request, call_next):
+        try:
+            return await call_next(request)
+        except Exception:
+            logger.exception(
+                "Unhandled error while processing request %s %s", request.method, request.url
+            )
+            return JSONResponse(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                content={"detail": "Internal server error"},
+            )
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins_list,
