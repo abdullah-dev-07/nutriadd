@@ -41,7 +41,11 @@ export default function AdminMediaPage() {
       setError(null)
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.detail : 'Failed to load showcase items.'
+        err instanceof ApiError
+          ? `${err.status}: ${err.detail}`
+          : `Failed to load showcase items: ${
+              err instanceof Error ? err.message : String(err)
+            }`
       )
     } finally {
       setLoading(false)
@@ -90,8 +94,14 @@ export default function AdminMediaPage() {
       setPending(null)
       await loadShowcase()
     } catch (err) {
+      // Surface the underlying cause — a bare "failed" message makes this
+      // impossible to debug (e.g. a 404 means the backend isn't deployed yet).
       setError(
-        err instanceof ApiError ? err.detail : 'Failed to add to showcase.'
+        err instanceof ApiError
+          ? `${err.status}: ${err.detail}`
+          : `Failed to add to showcase: ${
+              err instanceof Error ? err.message : String(err)
+            }`
       )
     } finally {
       setSaving(false)
