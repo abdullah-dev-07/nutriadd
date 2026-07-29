@@ -18,6 +18,9 @@ export type Stat = {
 }
 
 export type Principal = {
+  /** Imported logo asset URL. When absent, initials are shown as a fallback. */
+  logo?: string
+
   name: string
   category: string
 }

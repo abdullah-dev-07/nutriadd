@@ -4,24 +4,6 @@ import { type Industry } from '@/types/content'
 
 export const industries: Industry[] = [
   {
-    icon: Stethoscope,
-    title: 'Hospitals & Clinics',
-    description:
-      'Supplying dependable pharmaceuticals and healthcare essentials to medical institutions.',
-  },
-  {
-    icon: Store,
-    title: 'Retail Pharmacies',
-    description:
-      'Keeping chemists and pharmacies stocked with trusted, quality-assured products.',
-  },
-  {
-    icon: Truck,
-    title: 'Distributors & Franchises',
-    description:
-      'Empowering business partners with a proven brand and a reliable supply chain.',
-  },
-  {
     icon: Leaf,
     title: 'Wellness & Nutrition',
     description:
@@ -38,5 +20,23 @@ export const industries: Industry[] = [
     title: 'Skincare & Cosmetics',
     description:
       'Cosmeceuticals that pair clinical care with visible, confidence-building results.',
+  },
+  {
+    icon: Stethoscope,
+    title: 'Hospitals & Clinics',
+    description:
+      'Supplying dependable pharmaceuticals and healthcare essentials to medical institutions.',
+  },
+  {
+    icon: Store,
+    title: 'Retail Pharmacies',
+    description:
+      'Keeping chemists and pharmacies stocked with trusted, quality-assured products.',
+  },
+  {
+    icon: Truck,
+    title: 'Distributors & Franchises',
+    description:
+      'Empowering business partners with a proven brand and a reliable supply chain.',
   },
 ]
