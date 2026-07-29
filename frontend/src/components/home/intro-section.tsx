@@ -44,14 +44,23 @@ export function IntroSection() {
 
         <Reveal delay={0.1}>
           <ul className="space-y-4">
-            {coreValues.map(({ icon: Icon, title, description }) => (
+            {coreValues.map(({ icon: Icon, image, title, description }) => (
               <li
                 key={title}
                 className="border-border flex gap-4 rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
               >
-                <span className="bg-gradient-brand flex size-12 shrink-0 items-center justify-center rounded-xl text-white">
-                  <Icon className="size-6" />
-                </span>
+                {image ? (
+                  <img
+                    src={image}
+                    alt=""
+                    aria-hidden="true"
+                    className="size-12 shrink-0"
+                  />
+                ) : (
+                  <span className="bg-gradient-brand flex size-12 shrink-0 items-center justify-center rounded-xl text-white">
+                    <Icon className="size-6" />
+                  </span>
+                )}
                 <div>
                   <h3 className="text-lg font-semibold">{title}</h3>
                   <p className="text-slate mt-1">{description}</p>

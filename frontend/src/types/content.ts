@@ -7,7 +7,8 @@ export type IconContent = {
 }
 
 export type Service = IconContent
-export type Value = IconContent
+// `image` (an imported asset URL) takes precedence over `icon` when present.
+export type Value = IconContent & { image?: string }
 export type Feature = IconContent
 export type Industry = IconContent
 

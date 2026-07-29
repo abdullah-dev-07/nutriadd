@@ -1,0 +1,72 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ringGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1FA64A"/>
+      <stop offset="100%" stop-color="#0E5EA8"/>
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#28C267"/>
+      <stop offset="100%" stop-color="#0E5EA8"/>
+    </linearGradient>
+    <linearGradient id="thumbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E7F6EC"/>
+    </linearGradient>
+    <filter id="softShadow3" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0E5EA8" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="400" height="400" fill="#FFFFFF"/>
+
+  <circle cx="200" cy="200" r="176" fill="none" stroke="url(#ringGrad3)" stroke-width="10"/>
+  <circle cx="200" cy="200" r="150" fill="#F4FBF7"/>
+
+  <g stroke="#1FA64A" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.55">
+    <path d="M118 236 C104 216 104 186 122 164"/>
+    <path d="M126 224 C118 210 120 192 132 178"/>
+    <path d="M134 212 C130 202 132 190 140 182"/>
+  </g>
+  <g stroke="#0E5EA8" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.55">
+    <path d="M282 236 C296 216 296 186 278 164"/>
+    <path d="M274 224 C282 210 280 192 268 178"/>
+    <path d="M266 212 C270 202 268 190 260 182"/>
+  </g>
+
+  <circle cx="200" cy="196" r="76" fill="url(#badgeGrad)" filter="url(#softShadow3)"/>
+
+  <g transform="translate(200,196)">
+    <rect x="-46" y="8" width="26" height="52" rx="8" fill="url(#thumbGrad)"/>
+    <path d="M-20 8
+             L-20 -4
+             C-20 -22 -8 -40 6 -46
+             C12 -48 16 -44 15 -38
+             L9 -12
+             L34 -12
+             C42 -12 48 -6 46 2
+             L38 40
+             C36 50 28 58 16 58
+             L-20 58
+             Z"
+          fill="url(#thumbGrad)"/>
+    <path d="M-20 8 L-20 -4 C-20 -22 -8 -40 6 -46" fill="none" stroke="#1FA64A" stroke-width="2" stroke-opacity="0.4"/>
+  </g>
+
+  <g transform="translate(200,300)" fill="#0E5EA8">
+    <g transform="translate(-64,0) scale(0.9)">
+      <path d="M0 -10 L2.9 -3.1 L10 -2.4 L4.8 2.6 L6.2 9.6 L0 6 L-6.2 9.6 L-4.8 2.6 L-10 -2.4 L-2.9 -3.1 Z"/>
+    </g>
+    <g transform="translate(-32,0) scale(0.9)">
+      <path d="M0 -10 L2.9 -3.1 L10 -2.4 L4.8 2.6 L6.2 9.6 L0 6 L-6.2 9.6 L-4.8 2.6 L-10 -2.4 L-2.9 -3.1 Z"/>
+    </g>
+    <g transform="translate(0,0) scale(1.1)" fill="#1FA64A">
+      <path d="M0 -10 L2.9 -3.1 L10 -2.4 L4.8 2.6 L6.2 9.6 L0 6 L-6.2 9.6 L-4.8 2.6 L-10 -2.4 L-2.9 -3.1 Z"/>
+    </g>
+    <g transform="translate(32,0) scale(0.9)">
+      <path d="M0 -10 L2.9 -3.1 L10 -2.4 L4.8 2.6 L6.2 9.6 L0 6 L-6.2 9.6 L-4.8 2.6 L-10 -2.4 L-2.9 -3.1 Z"/>
+    </g>
+    <g transform="translate(64,0) scale(0.9)">
+      <path d="M0 -10 L2.9 -3.1 L10 -2.4 L4.8 2.6 L6.2 9.6 L0 6 L-6.2 9.6 L-4.8 2.6 L-10 -2.4 L-2.9 -3.1 Z"/>
+    </g>
+  </g>
+</svg>

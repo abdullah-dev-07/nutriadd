@@ -10,7 +10,7 @@ export const siteConfig = {
     'NutriAdd (Life Care) is a Lahore-based pharmaceutical, nutraceutical, cosmeceutical and food-supplement company offering marketing, franchising, trading and consultancy across Pakistan.',
   url: import.meta.env.VITE_SITE_URL ?? 'https://www.nutriadd.com',
   contact: {
-    email: 'info@lifecare.com',
+    email: 'info@nutriadd.store',
     phones: [
       '+92-42-35414433',
       '+92-300-8480844',

@@ -1,0 +1,69 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1FA64A"/>
+      <stop offset="100%" stop-color="#0E5EA8"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#28C267"/>
+      <stop offset="100%" stop-color="#0E5EA8"/>
+    </linearGradient>
+    <linearGradient id="handGradA" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#DFF4E7"/>
+    </linearGradient>
+    <linearGradient id="handGradB" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EAF3FB"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0E5EA8" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="400" height="400" fill="#FFFFFF"/>
+
+  <circle cx="200" cy="200" r="176" fill="none" stroke="url(#ringGrad)" stroke-width="10"/>
+  <circle cx="200" cy="200" r="150" fill="#F4FBF6"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M200 92
+             L266 118
+             L266 196
+             C266 246 236 278 200 294
+             C164 278 134 246 134 196
+             L134 118
+             Z"
+          fill="url(#shieldGrad)"/>
+    <path d="M200 108
+             L252 129
+             L252 196
+             C252 238 227 265 200 279
+             C173 265 148 238 148 196
+             L148 129
+             Z"
+          fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3"/>
+  </g>
+
+  <g transform="translate(200,208)">
+    <path d="M-62 -6 L-18 -6 L-18 14 L-58 14 C-66 14 -72 8 -72 0 C-72 -8 -68 -6 -62 -6 Z" fill="url(#handGradA)"/>
+    <path d="M62 -6 L18 -6 L18 14 L58 14 C66 14 72 8 72 0 C72 -8 68 -6 62 -6 Z" fill="url(#handGradB)"/>
+    <path d="M-20 -8
+             C-14 -16 -6 -16 -2 -8
+             C2 -16 10 -16 16 -8
+             C22 -2 20 8 12 12
+             L-12 12
+             C-20 8 -24 -2 -20 -8 Z"
+          fill="#FFFFFF"/>
+    <path d="M-20 -8 C-14 -16 -6 -16 -2 -8" fill="none" stroke="#1FA64A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M16 -8 C10 -16 2 -16 -2 -8" fill="none" stroke="#0E5EA8" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M-8 8 L-8 -1" stroke="#CFE9DA" stroke-width="2" stroke-linecap="round"/>
+    <path d="M0 10 L0 0" stroke="#CFE9DA" stroke-width="2" stroke-linecap="round"/>
+    <path d="M8 8 L8 -1" stroke="#CFE9DA" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(200,150)">
+    <circle cx="0" cy="0" r="20" fill="#FFFFFF" fill-opacity="0.15"/>
+    <path d="M-9 0 L-2 8 L11 -9" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
