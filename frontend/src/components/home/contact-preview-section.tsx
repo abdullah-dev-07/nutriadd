@@ -20,7 +20,7 @@ export function ContactPreviewSection() {
     {
       icon: Phone,
       title: 'Call Us',
-      lines: [phones[0], phones[1]],
+      lines: [phones[0], phones[1], phones[2], phones[3]],
     },
     {
       icon: Mail,
