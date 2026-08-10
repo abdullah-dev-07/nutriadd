@@ -288,3 +288,4 @@ The layout (`routers/` → `services/` → `models/`, one module per resource) i
 - **Cloud storage / downloads** — `app/services/storage_service.py` already wraps Azure Blob Storage; add a `documents` container for PDFs and reuse `POST /admin/media/upload` (it accepts `application/pdf`).
 
 Each of these is additive — new routers, new service modules, new Alembic migrations — rather than a rewrite of what's here.
+# CI/CD deployment test
