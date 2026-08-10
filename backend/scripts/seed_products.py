@@ -7,14 +7,14 @@ Run from the `backend/` directory with the virtualenv active:
 Safe to re-run: categories and products are upserted by their unique `slug`.
 
 Media handling:
-- If AZURE_STORAGE_CONNECTION_STRING is configured, each product's local image
+- When the bundled source images are present, each product's local image
   (frontend/src/assets/<slug>.<ext>) and promo image (frontend/public/promo/
-  promo-<slug>.jpeg) are uploaded to Azure Blob Storage and the resulting HTTPS
-  URLs are stored on the product (the DB never stores binary data).
-- If Azure is NOT configured (e.g. local development), the product's `slug` is
-  stored as a placeholder in `image_url` and `promo_image_url` is left null; the
-  frontend falls back to its bundled asset matched by slug, so the catalog still
-  renders locally without Azure.
+  promo-<slug>.jpeg) are copied into the VPS media directory (settings.MEDIA_ROOT,
+  served by Nginx) and the resulting HTTPS URLs are stored on the product (the DB
+  never stores binary data).
+- If the source images aren't present (e.g. running outside the repo), the
+  product's `slug` is stored as a placeholder in `image_url` and `promo_image_url`
+  is left null; the frontend falls back to its bundled asset matched by slug.
 
 Product copy (name/description/benefits/tags/features/ingredients) is transcribed
 from the promotional artwork in frontend/public/promo/. No usage instructions or
@@ -22,7 +22,6 @@ warnings are printed on that artwork, so those fields are intentionally null.
 """
 import asyncio
 import logging
-import mimetypes
 from pathlib import Path
 
 from sqlalchemy import select
@@ -286,36 +285,29 @@ PRODUCTS = [
     },
 ]
 
-_azure_enabled = bool(settings.AZURE_STORAGE_CONNECTION_STRING)
-
-
 def _resolve_media_urls(data: dict) -> tuple[str, str | None]:
-    """Return (image_url, promo_image_url). Uploads to Azure Blob Storage when
-    configured; otherwise returns a slug placeholder so local dev still works."""
-    if not _azure_enabled:
-        return data["slug"], None
-
-    # Imported lazily so the script doesn't require azure-storage-blob for the
-    # local, no-Azure path.
-    from app.services import storage_service
-
-    storage_service.ensure_container(settings.AZURE_STORAGE_PRODUCT_CONTAINER)
-    storage_service.ensure_container(settings.AZURE_STORAGE_PROMO_CONTAINER)
-
+    """Return (image_url, promo_image_url). Copies the bundled product/promo image
+    files into the VPS media directory (served by Nginx) when the local source files
+    are present; otherwise returns a slug placeholder so dev without the assets works.
+    """
     image_path = ASSETS_DIR / data["image_file"]
     promo_path = PROMO_DIR / data["promo_file"]
 
-    image_url = storage_service.upload_file(
-        settings.AZURE_STORAGE_PRODUCT_CONTAINER,
-        data["image_file"],
-        image_path.read_bytes(),
-        mimetypes.guess_type(image_path.name)[0] or "application/octet-stream",
+    if not image_path.exists():
+        # Source assets aren't present (e.g. running the seed outside the repo).
+        return data["slug"], None
+
+    from app.services import storage_service
+
+    image_url = storage_service.save_media(
+        settings.MEDIA_PRODUCT_DIR, data["image_file"], image_path.read_bytes()
     )
-    promo_url = storage_service.upload_file(
-        settings.AZURE_STORAGE_PROMO_CONTAINER,
-        data["promo_file"],
-        promo_path.read_bytes(),
-        mimetypes.guess_type(promo_path.name)[0] or "application/octet-stream",
+    promo_url = (
+        storage_service.save_media(
+            settings.MEDIA_PROMO_DIR, data["promo_file"], promo_path.read_bytes()
+        )
+        if promo_path.exists()
+        else None
     )
     return image_url, promo_url
 
@@ -369,11 +361,11 @@ async def upsert_product(db: AsyncSession, data: dict, category_id) -> None:
 
 
 async def seed() -> None:
-    if not _azure_enabled:
+    if not (ASSETS_DIR / PRODUCTS[0]["image_file"]).exists():
         logger.warning(
-            "AZURE_STORAGE_CONNECTION_STRING not set — seeding with slug placeholders "
-            "for images (frontend uses bundled assets as a fallback). Set it to upload "
-            "media to Azure Blob Storage."
+            "Bundled image assets not found (%s) — seeding with slug placeholders. "
+            "Run the seed from within the repo so images can be copied into MEDIA_ROOT.",
+            ASSETS_DIR,
         )
 
     async with AsyncSessionLocal() as db:

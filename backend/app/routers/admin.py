@@ -49,21 +49,21 @@ async def upload_media(
     file: UploadFile = File(...),
     target: str = "product",
 ) -> dict:
-    """Upload an image / video / PDF to Azure Blob Storage and return its public URL.
+    """Upload an image / video / PDF to VPS disk (served by Nginx) and return its
+    public URL.
 
     `target` is a logical destination ("product" or "promo"), resolved here to the
-    actual container name from settings. The server is the single source of truth for
-    container names — the frontend never hardcodes them, so the real Azure container
-    names only need to be correct in the backend's .env."""
-    containers = {
-        "product": settings.AZURE_STORAGE_PRODUCT_CONTAINER,
-        "promo": settings.AZURE_STORAGE_PROMO_CONTAINER,
+    actual media subdirectory from settings. The server is the single source of truth
+    for those directory names — the frontend never hardcodes them."""
+    subdirs = {
+        "product": settings.MEDIA_PRODUCT_DIR,
+        "promo": settings.MEDIA_PROMO_DIR,
     }
-    container = containers.get(target)
-    if container is None:
+    subdir = subdirs.get(target)
+    if subdir is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid target '{target}'. Allowed: {sorted(containers)}",
+            detail=f"Invalid target '{target}'. Allowed: {sorted(subdirs)}",
         )
     if file.content_type not in _ALLOWED_UPLOAD_TYPES:
         raise HTTPException(
@@ -71,9 +71,9 @@ async def upload_media(
             detail=f"Unsupported content type: {file.content_type}",
         )
     safe_name = _SAFE_NAME.sub("-", (file.filename or "upload").strip()).strip("-") or "upload"
-    blob_name = f"{uuid.uuid4().hex}-{safe_name}"
+    filename = f"{uuid.uuid4().hex}-{safe_name}"
     data = await file.read()
-    url = storage_service.upload_file(container, blob_name, data, file.content_type)
+    url = storage_service.save_media(subdir, filename, data)
     return {"url": url}
 
 

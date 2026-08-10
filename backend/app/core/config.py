@@ -16,13 +16,21 @@ class Settings(BaseSettings):
     # TLS is enforced automatically whenever the host isn't localhost (see app/db/base.py).
     DATABASE_URL: str = "mysql+aiomysql://user:password@localhost:3306/nutriadd"
 
-    # Azure Blob Storage — all product/promo/document media lives here; the DB only
-    # ever stores the resulting HTTPS URLs, never binary data.
-    # Authenticate EITHER with a full connection string, OR with account name + key.
+    # Media storage — product/promo/document files are stored as plain files on the
+    # VPS filesystem under MEDIA_ROOT, and served publicly by Nginx (not FastAPI) at
+    # MEDIA_BASE_URL/media/... The DB only ever stores the resulting HTTPS URL string,
+    # never binary data.
+    MEDIA_ROOT: str = "/var/www/nutriadd/media"
+    MEDIA_BASE_URL: str = "https://api.nutriadd.store"
+    MEDIA_PRODUCT_DIR: str = "products"
+    MEDIA_PROMO_DIR: str = "promo"
+
+    # DEAD CONFIG — Azure Blob Storage is no longer used (media moved to VPS disk).
+    # These fields are retained only so leftover AZURE_* lines in an old .env don't
+    # cause errors. Do NOT wire new code to them.
     AZURE_STORAGE_CONNECTION_STRING: str = ""
     AZURE_STORAGE_ACCOUNT: str = ""
     AZURE_STORAGE_KEY: str = ""
-    # These must match the real container names in your storage account.
     AZURE_STORAGE_PRODUCT_CONTAINER: str = "product-images"
     AZURE_STORAGE_PROMO_CONTAINER: str = "promo-media"
 
