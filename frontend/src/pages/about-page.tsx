@@ -2,6 +2,9 @@ import { CeoMessageSection } from '@/components/about/ceo-message-section'
 import { StorySection } from '@/components/about/story-section'
 import { ValuesSection } from '@/components/about/values-section'
 import { VisionMissionSection } from '@/components/about/vision-mission-section'
+import { IndustriesSection } from '@/components/home/industries-section'
+import { PrincipalsSection } from '@/components/home/principals-section'
+import { ServicesSection } from '@/components/home/services-section'
 import { CtaBand } from '@/components/shared/cta-band'
 import { PageHero } from '@/components/shared/page-hero'
 import { Seo } from '@/components/shared/seo'
@@ -23,6 +26,9 @@ export default function AboutPage() {
       <CeoMessageSection />
       <VisionMissionSection />
       <ValuesSection />
+      <ServicesSection />
+      <IndustriesSection />
+      <PrincipalsSection />
       <CtaBand
         title="Let's Build a Healthier Future"
         description="Partner with NutriAdd for franchising, trading or marketing opportunities across Pakistan."

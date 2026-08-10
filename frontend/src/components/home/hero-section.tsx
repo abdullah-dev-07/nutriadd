@@ -41,25 +41,25 @@ export function HeroSection() {
           </span>
 
           <h1 className="mt-6 text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl">
-            <span className="text-gradient-brand">Caring</span> for a Healthier
-            Life, Every Day
+            <span className="text-gradient-brand">Wellness</span> Supplements,
+            Delivered
           </h1>
 
           <p className="text-slate mt-6 max-w-xl text-lg leading-relaxed">
-            {siteConfig.legalName} delivers trusted pharmaceutical,
-            nutraceutical, cosmeceutical and food-supplement solutions across
-            Pakistan — with 15+ years of quality, reliability and care.
+            Science-backed nutraceuticals from {siteConfig.legalName} — for
+            brain, sleep, bone, energy and everyday wellness. Trusted for 15+
+            years across Pakistan.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Button asChild variant="brand" size="lg">
               <Link to="/products">
-                Explore Our Products
+                Shop Products
                 <ArrowRight />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/contact">Become a Partner</Link>
+              <Link to="/about">Learn About Us</Link>
             </Button>
           </div>
 

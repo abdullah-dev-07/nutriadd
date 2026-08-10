@@ -1,5 +1,6 @@
 import { Loader2, PackageX, Search, TriangleAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { ProductCard } from '@/components/products/product-card'
 import { Container } from '@/components/shared/container'
@@ -19,9 +20,23 @@ const ALL_CATEGORY = 'All'
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [searchParams, setSearchParams] = useSearchParams()
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY)
+  // Initialise the category filter from the URL (?category=slug) so links from
+  // the home page "Shop by Category" tiles land pre-filtered.
+  const [activeCategory, setActiveCategory] = useState(
+    () => searchParams.get('category') ?? ALL_CATEGORY
+  )
+
+  // Keep the URL in sync when the user clicks a category chip (and vice versa).
+  function selectCategory(slug: string) {
+    setActiveCategory(slug)
+    setSearchParams(
+      slug === ALL_CATEGORY ? {} : { category: slug },
+      { replace: true }
+    )
+  }
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
     'loading'
   )
@@ -120,7 +135,7 @@ export default function ProductsPage() {
                     <button
                       key={categorySlug}
                       type="button"
-                      onClick={() => setActiveCategory(categorySlug)}
+                      onClick={() => selectCategory(categorySlug)}
                       aria-pressed={isActive}
                       className={cn(
                         'rounded-full border px-5 py-2 text-sm font-medium transition-colors',

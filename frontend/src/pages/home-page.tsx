@@ -1,11 +1,9 @@
 import { ContactPreviewSection } from '@/components/home/contact-preview-section'
 import { CtaSection } from '@/components/home/cta-section'
+import { FeaturedProductsSection } from '@/components/home/featured-products-section'
 import { HeroSection } from '@/components/home/hero-section'
-import { IndustriesSection } from '@/components/home/industries-section'
-import { IntroSection } from '@/components/home/intro-section'
-import { PrincipalsSection } from '@/components/home/principals-section'
 import { PromoShowcaseSection } from '@/components/home/promo-showcase-section'
-import { ServicesSection } from '@/components/home/services-section'
+import { ShopByCategorySection } from '@/components/home/shop-by-category-section'
 import { WellnessBannerSection } from '@/components/home/wellness-banner-section'
 import { WhyChooseUsSection } from '@/components/home/why-choose-us-section'
 import { Seo } from '@/components/shared/seo'
@@ -16,13 +14,11 @@ export default function HomePage() {
     <>
       <Seo title="Home" path="/" jsonLd={organizationSchema()} />
       <HeroSection />
+      <ShopByCategorySection />
+      <FeaturedProductsSection />
       <WellnessBannerSection />
-      <IntroSection />
-      <PromoShowcaseSection />
-      <ServicesSection />
-      <IndustriesSection />
       <WhyChooseUsSection />
-      <PrincipalsSection />
+      <PromoShowcaseSection />
       <CtaSection />
       <ContactPreviewSection />
     </>

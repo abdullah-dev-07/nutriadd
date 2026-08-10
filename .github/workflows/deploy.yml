@@ -9,18 +9,41 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to Azure VM
+      - name: Deploy to NutriAdd Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
+
           script: |
-            cd ~/apps/nutriadd
+            set -e
+
+            cd ~/nutriadd
+
+            echo "Pulling latest code..."
             git pull origin main
+
             cd backend
+
+            echo "Activating virtual environment..."
             source venv/bin/activate
+
+            echo "Installing dependencies..."
             pip install -r requirements.txt
+
+            echo "Running database migrations..."
             alembic upgrade head
+
+            echo "Restarting FastAPI..."
             sudo systemctl restart nutriadd-backend
+
+            echo "Checking service..."
+            sudo systemctl is-active --quiet nutriadd-backend
+
+            echo "Checking API health..."
+            curl -f https://api.nutriadd.store/health
+
+            echo "Deployment successful!"
