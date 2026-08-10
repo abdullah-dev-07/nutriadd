@@ -25,12 +25,18 @@ def build_connect_args() -> dict:
     return {"ssl": ssl.create_default_context()}
 
 
+# NOTE: pool_pre_ping is intentionally NOT enabled. SQLAlchemy's pre-ping calls
+# aiomysql's connection.ping(), but aiomysql's async ping() requires a `reconnect`
+# argument that SQLAlchemy's pre-ping path doesn't supply — raising
+# "TypeError: ...ping() missing 1 required positional argument: 'reconnect'" on the
+# FIRST use of any idle-then-reused connection (seen as intermittent 500s that
+# "fix" on retry). Instead we proactively recycle connections well under MySQL's
+# wait_timeout so stale connections are discarded before they're ever reused.
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     future=True,
-    pool_pre_ping=True,
-    pool_recycle=280,
+    pool_recycle=180,
     connect_args=build_connect_args(),
 )
 
