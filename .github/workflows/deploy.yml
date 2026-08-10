@@ -39,10 +39,13 @@ jobs:
             alembic upgrade head
 
             echo "Restarting FastAPI..."
-            sudo systemctl restart nutriadd-backend
+            sudo -n systemctl restart nutriadd-backend
 
             echo "Checking service..."
-            sudo systemctl is-active --quiet nutriadd-backend
+            sudo -n systemctl is-active --quiet nutriadd-backend
+
+	    echo "Waiting for API..."
+	    sleep 3
 
             echo "Checking API health..."
             curl -f https://api.nutriadd.store/health
