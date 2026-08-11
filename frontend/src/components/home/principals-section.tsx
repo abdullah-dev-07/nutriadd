@@ -34,6 +34,8 @@ export function PrincipalsSection() {
                     src={logo}
                     alt={`${name} logo`}
                     loading="lazy"
+                    width={48}
+                    height={48}
                     className="h-12 w-12 shrink-0 object-contain"
                   />
                 ) : (
@@ -57,6 +59,8 @@ export function PrincipalsSection() {
             <img
               src={fpcLogo}
               alt="FAMS Pharma Care (FPC) logo"
+              width={64}
+              height={64}
               className="size-16 shrink-0 object-contain"
             />
             <div>

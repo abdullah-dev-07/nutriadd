@@ -8,7 +8,8 @@ export const siteConfig = {
   tagline: 'Caring for Healthy Life',
   description:
     'NutriAdd (Life Care) is a Lahore-based pharmaceutical, nutraceutical, cosmeceutical and food-supplement company offering marketing, franchising, trading and consultancy across Pakistan.',
-  url: import.meta.env.VITE_SITE_URL ?? 'https://www.nutriadd.com',
+  // Canonical production domain. Override via VITE_SITE_URL at build if needed.
+  url: import.meta.env.VITE_SITE_URL ?? 'https://nutriadd.store',
   contact: {
     email: 'info@nutriadd.store',
     phones: [

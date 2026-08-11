@@ -62,6 +62,8 @@ export default function CartPage() {
                         src={getProductImage(item.imageUrl, item.slug)}
                         alt={item.name}
                         loading="lazy"
+                        width={200}
+                        height={200}
                         className="size-full object-contain p-2"
                       />
                     </Link>

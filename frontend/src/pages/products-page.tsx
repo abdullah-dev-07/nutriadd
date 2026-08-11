@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { getCategories, getProducts } from '@/lib/api/products'
 import { ApiError } from '@/lib/api/client'
+import { siteConfig } from '@/lib/site-config'
+import { breadcrumbSchema } from '@/lib/structured-data'
 import { cn } from '@/lib/utils'
 import { type Category, type Product } from '@/types/product'
 
@@ -85,12 +87,42 @@ export default function ProductsPage() {
     }
   }, [debouncedSearch, activeCategory, reloadToken])
 
+  // Category-aware, non-invasive SEO (no visual change). A category-filtered view
+  // is self-canonical and indexable; the plain list and any search/pagination
+  // permutations canonicalize to /products so they don't create duplicates.
+  const activeCategoryObj =
+    activeCategory !== ALL_CATEGORY
+      ? categories.find((c) => c.slug === activeCategory)
+      : undefined
+  const seoTitle = activeCategoryObj
+    ? `${activeCategoryObj.name} Supplements`
+    : 'Products'
+  const seoPath = activeCategoryObj
+    ? `/products?category=${activeCategoryObj.slug}`
+    : '/products'
+  const seoDescription = activeCategoryObj
+    ? `Shop ${activeCategoryObj.name} supplements from NutriAdd (Life Care) — delivered across Pakistan.`
+    : 'Our portfolio across pharmaceuticals, nutraceuticals, cosmeceuticals, food supplements and dentistry.'
+  const seoCrumbs = [
+    { name: 'Home', url: siteConfig.url },
+    { name: 'Products', url: `${siteConfig.url}/products` },
+    ...(activeCategoryObj
+      ? [
+          {
+            name: activeCategoryObj.name,
+            url: `${siteConfig.url}/products?category=${activeCategoryObj.slug}`,
+          },
+        ]
+      : []),
+  ]
+
   return (
     <>
       <Seo
-        title="Products"
-        description="Our portfolio across pharmaceuticals, nutraceuticals, cosmeceuticals, food supplements and dentistry."
-        path="/products"
+        title={seoTitle}
+        description={seoDescription}
+        path={seoPath}
+        jsonLd={breadcrumbSchema(seoCrumbs)}
       />
       <PageHero
         breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Products' }]}

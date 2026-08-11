@@ -54,6 +54,8 @@ export function IntroSection() {
                     src={image}
                     alt=""
                     aria-hidden="true"
+                    width={48}
+                    height={48}
                     className="size-12 shrink-0"
                   />
                 ) : (

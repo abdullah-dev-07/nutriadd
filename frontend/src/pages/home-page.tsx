@@ -7,12 +7,16 @@ import { ShopByCategorySection } from '@/components/home/shop-by-category-sectio
 import { WellnessBannerSection } from '@/components/home/wellness-banner-section'
 import { WhyChooseUsSection } from '@/components/home/why-choose-us-section'
 import { Seo } from '@/components/shared/seo'
-import { organizationSchema } from '@/lib/structured-data'
+import { organizationSchema, webSiteSchema } from '@/lib/structured-data'
 
 export default function HomePage() {
   return (
     <>
-      <Seo title="Home" path="/" jsonLd={organizationSchema()} />
+      <Seo
+        title="Home"
+        path="/"
+        jsonLd={[organizationSchema(), webSiteSchema()]}
+      />
       <HeroSection />
       {/* Campaigns & Announcements — 2nd section, right after the hero.
           Auto-hides when the admin has no active promo media. */}

@@ -20,6 +20,8 @@ export function ProductCard({ product }: { product: Product }) {
           src={getProductImage(product.image_url, product.slug)}
           alt={product.name}
           loading="lazy"
+          width={800}
+          height={800}
           className="size-full object-contain p-6 transition-transform duration-300 group-hover:scale-105"
         />
         <span

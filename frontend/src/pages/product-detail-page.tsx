@@ -15,7 +15,7 @@ import { useCart } from '@/lib/cart/cart-context'
 import { formatCurrency } from '@/lib/format'
 import { getProductImage } from '@/lib/product-images'
 import { siteConfig } from '@/lib/site-config'
-import { productSchema } from '@/lib/structured-data'
+import { breadcrumbSchema, productSchema } from '@/lib/structured-data'
 import { cn } from '@/lib/utils'
 import { type Product } from '@/types/product'
 
@@ -140,6 +140,7 @@ export default function ProductDetailPage() {
   const inStock = product.availability === 'in_stock'
   const productPath = `/products/${product.slug}`
   const productImage = getProductImage(product.image_url, product.slug)
+  const productUrl = `${siteConfig.url}${productPath}`
 
   return (
     <>
@@ -148,7 +149,18 @@ export default function ProductDetailPage() {
         description={product.short_description}
         path={productPath}
         image={productImage}
-        jsonLd={productSchema(product, `${siteConfig.url}${productPath}`)}
+        jsonLd={[
+          productSchema(product, productUrl),
+          breadcrumbSchema([
+            { name: 'Home', url: siteConfig.url },
+            { name: 'Products', url: `${siteConfig.url}/products` },
+            {
+              name: product.category.name,
+              url: `${siteConfig.url}/products?category=${product.category.slug}`,
+            },
+            { name: product.name, url: productUrl },
+          ]),
+        ]}
       />
 
       <Section className="pt-12 md:pt-16">
@@ -167,6 +179,8 @@ export default function ProductDetailPage() {
               <img
                 src={productImage}
                 alt={product.name}
+                width={1000}
+                height={1000}
                 className="aspect-square size-full object-contain p-10"
               />
             </div>

@@ -47,6 +47,8 @@ export function WellnessBannerSection() {
               src={wellness}
               alt="Arousal level of wellness with NutriAdd by Life Care — a man and a woman running actively on a track"
               loading="lazy"
+              width={1536}
+              height={1024}
               className="border-border/60 relative w-full rounded-3xl border object-cover shadow-sm"
             />
           </figure>

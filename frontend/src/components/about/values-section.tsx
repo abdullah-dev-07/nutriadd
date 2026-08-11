@@ -23,6 +23,8 @@ export function ValuesSection() {
                     src={image}
                     alt=""
                     aria-hidden="true"
+                    width={64}
+                    height={64}
                     className="mx-auto size-16"
                   />
                 ) : (

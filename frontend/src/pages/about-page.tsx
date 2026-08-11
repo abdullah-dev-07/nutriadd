@@ -8,6 +8,8 @@ import { ServicesSection } from '@/components/home/services-section'
 import { CtaBand } from '@/components/shared/cta-band'
 import { PageHero } from '@/components/shared/page-hero'
 import { Seo } from '@/components/shared/seo'
+import { siteConfig } from '@/lib/site-config'
+import { aboutPageSchema, breadcrumbSchema } from '@/lib/structured-data'
 
 export default function AboutPage() {
   return (
@@ -16,6 +18,13 @@ export default function AboutPage() {
         title="About Us"
         description="A family-driven healthcare company built on trust, quality and 15+ years of commitment across Pakistan."
         path="/about"
+        jsonLd={[
+          aboutPageSchema(`${siteConfig.url}/about`),
+          breadcrumbSchema([
+            { name: 'Home', url: siteConfig.url },
+            { name: 'About', url: `${siteConfig.url}/about` },
+          ]),
+        ]}
       />
       <PageHero
         breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}

@@ -1,4 +1,19 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.nutriadd.com/sitemap.xml
+# Private / user-specific areas — not for indexing.
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /account/
+Disallow: /admin
+Disallow: /admin/
+
+# Note: /products?category=… (category views) stay crawlable — duplicate
+# search/pagination permutations are handled via canonical tags, not robots.
+
+Sitemap: https://nutriadd.store/sitemap.xml
