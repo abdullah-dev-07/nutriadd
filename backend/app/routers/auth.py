@@ -13,6 +13,7 @@ from app.schemas.auth import (
 from app.schemas.user import (
     ChangePasswordRequest,
     ForgotPasswordRequest,
+    ResetPasswordRequest,
     UserCreate,
     UserRead,
 )
@@ -68,3 +69,9 @@ async def change_password(
 async def forgot_password(payload: ForgotPasswordRequest, db: AsyncSession = Depends(get_db)) -> dict:
     await auth_service.forgot_password(db, payload.email)
     return {"message": "If an account exists for this email, a reset link has been sent."}
+
+
+@router.post("/reset-password", status_code=status.HTTP_204_NO_CONTENT)
+async def reset_password(payload: ResetPasswordRequest, db: AsyncSession = Depends(get_db)) -> None:
+    await auth_service.reset_password(db, payload.token, payload.new_password)
+    return None

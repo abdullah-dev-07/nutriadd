@@ -57,3 +57,11 @@ export function forgotPassword(email: string) {
     skipAuthRetry: true,
   })
 }
+
+export function resetPassword(token: string, newPassword: string) {
+  return apiFetch<void>('/auth/reset-password', {
+    method: 'POST',
+    body: { token, new_password: newPassword },
+    skipAuthRetry: true,
+  })
+}

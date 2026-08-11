@@ -11,6 +11,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 TOKEN_TYPE_ACCESS = "access"
 TOKEN_TYPE_REFRESH = "refresh"
+TOKEN_TYPE_RESET = "reset"
 
 
 def hash_password(password: str) -> str:
@@ -50,6 +51,15 @@ def create_refresh_token(subject: str, extra_claims: Optional[dict[str, Any]] = 
         TOKEN_TYPE_REFRESH,
         timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
         extra_claims,
+    )
+
+
+def create_reset_token(subject: str) -> str:
+    """Short-lived, single-purpose token for password reset links."""
+    return _create_token(
+        subject,
+        TOKEN_TYPE_RESET,
+        timedelta(minutes=settings.RESET_TOKEN_EXPIRE_MINUTES),
     )
 
 

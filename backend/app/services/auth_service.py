@@ -5,10 +5,13 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.security import (
     TOKEN_TYPE_REFRESH,
+    TOKEN_TYPE_RESET,
     create_access_token,
     create_refresh_token,
+    create_reset_token,
     decode_token,
     hash_password,
     verify_password,
@@ -16,6 +19,7 @@ from app.core.security import (
 from app.models.user import User
 from app.schemas.auth import RefreshedToken, Token
 from app.schemas.user import UserCreate
+from app.services import email_service
 
 logger = logging.getLogger(__name__)
 
@@ -94,15 +98,53 @@ async def change_password(db: AsyncSession, user: User, current_password: str, n
     await db.commit()
 
 
-def send_reset_email(email: str, token: str) -> None:
-    # TODO: integrate real email provider (e.g. Resend/SendGrid)
-    logger.info("Password reset requested for %s (token=%s)", email, token)
+async def send_reset_email(email: str, name: str, token: str) -> None:
+    reset_url = f"{settings.SITE_URL.rstrip('/')}/reset-password?token={token}"
+    await email_service.send_email(
+        to=[email],
+        subject="Reset your NutriAdd password",
+        body=(
+            f"Hi {name or 'there'},\n\n"
+            f"We received a request to reset your NutriAdd password. "
+            f"Click the link below to choose a new one — it expires in "
+            f"{settings.RESET_TOKEN_EXPIRE_MINUTES} minutes:\n\n"
+            f"{reset_url}\n\n"
+            f"If you didn't request this, you can safely ignore this email; "
+            f"your password won't change.\n\n"
+            f"— NutriAdd (Life Care)"
+        ),
+    )
 
 
 async def forgot_password(db: AsyncSession, email: str) -> None:
     user = await get_user_by_email(db, email)
     if user is not None:
-        reset_token = create_access_token(str(user.id), extra_claims={"purpose": "password_reset"})
-        send_reset_email(email, reset_token)
+        reset_token = create_reset_token(str(user.id))
+        await send_reset_email(user.email, user.full_name, reset_token)
     # Always behave the same way regardless of whether the user exists,
     # to avoid leaking which emails are registered (no user enumeration).
+
+
+async def reset_password(db: AsyncSession, token: str, new_password: str) -> None:
+    try:
+        payload = decode_token(token)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired reset link")
+
+    if payload.get("type") != TOKEN_TYPE_RESET:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid reset token")
+
+    user_id = payload.get("sub")
+    try:
+        user_uuid = uuid.UUID(user_id)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid reset token")
+
+    result = await db.execute(select(User).where(User.id == user_uuid))
+    user = result.scalar_one_or_none()
+    if user is None or not user.is_active:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired reset link")
+
+    user.hashed_password = hash_password(new_password)
+    db.add(user)
+    await db.commit()
