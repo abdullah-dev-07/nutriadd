@@ -1,5 +1,5 @@
 import { Loader2, TriangleAlert } from 'lucide-react'
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 import { Container } from '@/components/shared/container'
@@ -28,6 +28,14 @@ export default function CheckoutPage() {
   const { user } = useAuth()
   const { items, subtotal, totalQuantity, clear } = useCart()
   const navigate = useNavigate()
+
+  // Stable per-checkout key so a double-click / retry can't create a duplicate
+  // order — the backend returns the same order for a repeated key.
+  const idempotencyKeyRef = useRef<string>(
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `ck-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  )
 
   const [values, setValues] = useState<CheckoutFormValues>({
     customerName: user?.full_name ?? '',
@@ -80,6 +88,7 @@ export default function CheckoutPage() {
         customer_phone: values.customerPhone.trim(),
         shipping_address: values.shippingAddress.trim(),
         notes: values.notes.trim() || undefined,
+        idempotency_key: idempotencyKeyRef.current,
       })
       clear()
       navigate('/account/orders', { state: { justPlacedOrderId: order.id } })

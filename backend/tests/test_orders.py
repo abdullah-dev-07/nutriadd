@@ -172,7 +172,9 @@ async def test_admin_can_view_any_order_and_update_status(client: AsyncClient, d
 
     admin_list_resp = await client.get("/api/v1/admin/orders", headers=admin_headers)
     assert admin_list_resp.status_code == 200
-    assert len(admin_list_resp.json()) == 1
+    admin_body = admin_list_resp.json()
+    assert admin_body["total"] == 1
+    assert len(admin_body["items"]) == 1
 
     status_resp = await client.patch(
         f"/api/v1/admin/orders/{order_id}/status", json={"status": "confirmed"}, headers=admin_headers

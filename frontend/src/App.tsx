@@ -27,6 +27,7 @@ const AdminProductFormPage = lazy(
   () => import('@/pages/admin/admin-product-form-page')
 )
 const AdminMediaPage = lazy(() => import('@/pages/admin/admin-media-page'))
+const AdminOrdersPage = lazy(() => import('@/pages/admin/admin-orders-page'))
 const BlogPage = lazy(() => import('@/pages/blog-page'))
 const BlogPostPage = lazy(() => import('@/pages/blog-post-page'))
 const ContactPage = lazy(() => import('@/pages/contact-page'))
@@ -84,6 +85,7 @@ function App() {
                 path="products/:id/edit"
                 element={<AdminProductFormPage />}
               />
+              <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="media" element={<AdminMediaPage />} />
             </Route>
             <Route path="blog" element={<BlogPage />} />

@@ -40,6 +40,24 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
+    # Transactional email (SMTP) — order confirmation to the customer + a
+    # notification to the business inbox. Credentials come from env only, never
+    # hardcoded. When SMTP_HOST is empty, emails are logged instead of sent, so
+    # local dev and order creation never fail just because email isn't configured.
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_USE_TLS: bool = True  # STARTTLS on 587; set false + port 465 for SSL
+    SMTP_USE_SSL: bool = False
+    # "From" address shown to recipients (e.g. orders@nutriadd.store).
+    EMAIL_FROM: str = ""
+    EMAIL_FROM_NAME: str = "NutriAdd"
+    # Business mailbox that receives a copy/notification of every new order.
+    ORDER_NOTIFY_EMAIL: str = ""
+    # Public site URL used to build order links inside emails.
+    SITE_URL: str = "https://nutriadd.store"
+
     # CORS — accepts either a JSON array ("[\"https://a.com\",\"https://b.com\"]")
     # or a plain comma-separated string ("https://a.com,https://b.com"), so it's
     # easy to set in a plain .env file on the VM without worrying about JSON quoting.

@@ -1,5 +1,36 @@
 import { apiFetch, apiUpload } from '@/lib/api/client'
+import { type Order, type OrderStatus } from '@/types/order'
 import { type Product, type ProductInput } from '@/types/product'
+
+export type AdminOrderListParams = {
+  search?: string
+  status?: OrderStatus
+  page?: number
+  page_size?: number
+}
+
+export type AdminOrderListResponse = {
+  items: Order[]
+  total: number
+  page: number
+  page_size: number
+}
+
+export function getAdminOrders(params: AdminOrderListParams = {}) {
+  const query = new URLSearchParams()
+  if (params.search) query.set('search', params.search)
+  if (params.status) query.set('status', params.status)
+  query.set('page', String(params.page ?? 1))
+  query.set('page_size', String(params.page_size ?? 50))
+  return apiFetch<AdminOrderListResponse>(`/admin/orders?${query.toString()}`)
+}
+
+export function updateAdminOrderStatus(orderId: string, status: OrderStatus) {
+  return apiFetch<Order>(`/admin/orders/${encodeURIComponent(orderId)}/status`, {
+    method: 'PATCH',
+    body: { status },
+  })
+}
 
 /**
  * Logical upload destination. The backend maps this to the real Azure container

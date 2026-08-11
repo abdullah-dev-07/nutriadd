@@ -1,14 +1,17 @@
 import re
 import uuid
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.deps import get_db, require_admin
+from app.models.order import OrderStatus
 from app.models.promo_media import PromoMedia
-from app.schemas.order import OrderRead, OrderStatusUpdate
+from app.schemas.order import OrderListResponse, OrderRead, OrderStatusUpdate
 from app.schemas.product import ProductCreate, ProductRead, ProductUpdate
 from app.schemas.promo_media import PromoMediaCreate, PromoMediaRead, PromoMediaUpdate
 from app.services import order_service, product_service, storage_service
@@ -127,9 +130,18 @@ async def delete_promo_media(media_id: uuid.UUID, db: AsyncSession = Depends(get
     return None
 
 
-@router.get("/orders", response_model=list[OrderRead])
-async def list_all_orders(db: AsyncSession = Depends(get_db)) -> list[OrderRead]:
-    return await order_service.list_all_orders(db)
+@router.get("/orders", response_model=OrderListResponse)
+async def list_all_orders(
+    search: Optional[str] = Query(default=None),
+    status_filter: Optional[OrderStatus] = Query(default=None, alias="status"),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=50, ge=1, le=100),
+    db: AsyncSession = Depends(get_db),
+) -> OrderListResponse:
+    items, total = await order_service.list_all_orders(
+        db, search=search, order_status=status_filter, page=page, page_size=page_size
+    )
+    return OrderListResponse(items=items, total=total, page=page, page_size=page_size)
 
 
 @router.patch("/orders/{order_id}/status", response_model=OrderRead)

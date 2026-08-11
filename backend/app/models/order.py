@@ -21,6 +21,11 @@ class Order(Base):
     __tablename__ = "orders"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    # Human-friendly unique order number (e.g. NA-20260811-AB12CD), shown to users.
+    order_number: Mapped[str] = mapped_column(String(32), unique=True, index=True, nullable=False)
+    # Optional client-supplied key to make order creation idempotent (prevents
+    # duplicate orders from double-clicks / retries). Unique per user when present.
+    idempotency_key: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     customer_name: Mapped[str] = mapped_column(String(255), nullable=False)
     customer_email: Mapped[str] = mapped_column(String(255), nullable=False)

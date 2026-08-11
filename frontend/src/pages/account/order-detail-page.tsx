@@ -12,7 +12,7 @@ import { type Order } from '@/types/order'
 
 const statusStyles: Record<string, string> = {
   pending: 'bg-mist text-slate',
-  processing: 'bg-accent text-brand-green-dark',
+  confirmed: 'bg-accent text-brand-green-dark',
   shipped: 'bg-accent text-brand-green-dark',
   delivered: 'bg-accent text-brand-green-dark',
   cancelled: 'bg-destructive/10 text-destructive',
@@ -96,7 +96,7 @@ export default function OrderDetailPage() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold">
-                Order #{order.id.slice(0, 8)}
+                Order {order.order_number}
               </h2>
               <p className="text-slate text-sm">
                 Placed on {formatDate(order.created_at)}

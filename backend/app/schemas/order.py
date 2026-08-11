@@ -15,11 +15,14 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     items: List[OrderItemCreate] = Field(min_length=1)
-    customer_name: str
+    customer_name: str = Field(min_length=1, max_length=255)
     customer_email: EmailStr
-    customer_phone: str
-    shipping_address: str
+    customer_phone: str = Field(min_length=3, max_length=64)
+    shipping_address: str = Field(min_length=5)
     notes: Optional[str] = None
+    # Optional client-generated key to make order creation idempotent (prevents
+    # duplicate orders from double-clicks / retries).
+    idempotency_key: Optional[str] = Field(default=None, max_length=64)
 
 
 class OrderItemRead(BaseModel):
@@ -36,6 +39,7 @@ class OrderRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
+    order_number: str
     user_id: uuid.UUID
     customer_name: str
     customer_email: EmailStr
@@ -52,3 +56,10 @@ class OrderRead(BaseModel):
 
 class OrderStatusUpdate(BaseModel):
     status: OrderStatus
+
+
+class OrderListResponse(BaseModel):
+    items: List[OrderRead]
+    total: int
+    page: int
+    page_size: int

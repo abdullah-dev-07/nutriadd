@@ -1,10 +1,10 @@
+// Must match the backend OrderStatus enum exactly.
 export type OrderStatus =
   | 'pending'
-  | 'processing'
+  | 'confirmed'
   | 'shipped'
   | 'delivered'
   | 'cancelled'
-  | string
 
 export type OrderItem = {
   id: string
@@ -16,6 +16,7 @@ export type OrderItem = {
 
 export type Order = {
   id: string
+  order_number: string
   user_id: string
   customer_name: string
   customer_email: string
@@ -41,4 +42,5 @@ export type CreateOrderPayload = {
   customer_phone: string
   shipping_address: string
   notes?: string
+  idempotency_key?: string
 }

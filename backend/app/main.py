@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.deps import get_db
-from app.routers import admin, auth, categories, contact, orders, products, promo_media
+from app.routers import admin, auth, cart, categories, contact, orders, products, promo_media
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +69,7 @@ def create_app() -> FastAPI:
     app.include_router(products.router, prefix=api_prefix)
     app.include_router(categories.router, prefix=api_prefix)
     app.include_router(orders.router, prefix=api_prefix)
+    app.include_router(cart.router, prefix=api_prefix)
     app.include_router(admin.router, prefix=api_prefix)
     app.include_router(contact.router, prefix=api_prefix)
     app.include_router(promo_media.router, prefix=api_prefix)

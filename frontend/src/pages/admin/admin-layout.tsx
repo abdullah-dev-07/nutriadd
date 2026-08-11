@@ -1,4 +1,4 @@
-import { Boxes, Upload } from 'lucide-react'
+import { Boxes, ClipboardList, Upload } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 
 import { Container } from '@/components/shared/container'
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 
 const tabs = [
   { to: '/admin', label: 'Products', icon: Boxes, end: true },
+  { to: '/admin/orders', label: 'Orders', icon: ClipboardList, end: false },
   { to: '/admin/media', label: 'Media Upload', icon: Upload, end: false },
 ]
 
