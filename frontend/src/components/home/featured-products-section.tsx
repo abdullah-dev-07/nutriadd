@@ -27,9 +27,16 @@ export function FeaturedProductsSection() {
       setStatus('loading')
       setError(null)
       try {
-        const response = await getProducts({ page_size: 100 })
+        // Prefer admin-featured products; if none are featured yet, fall back to
+        // the newest few so the home page is never empty.
+        const featured = await getProducts({ featured: true, page_size: 3 })
+        let items = featured.items
+        if (items.length === 0) {
+          const latest = await getProducts({ page_size: 3 })
+          items = latest.items
+        }
         if (cancelled) return
-        setProducts(response.items)
+        setProducts(items.slice(0, 3))
         setStatus('success')
       } catch (err) {
         if (cancelled) return
@@ -51,7 +58,7 @@ export function FeaturedProductsSection() {
       <Container>
         <SectionHeading
           eyebrow="Shop NutriAdd"
-          title="Our Products"
+          title="Featured Products"
           description="Science-backed nutraceuticals for brain, sleep, bone, energy and everyday wellness — add to cart and order in minutes."
         />
 

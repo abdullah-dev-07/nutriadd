@@ -14,11 +14,13 @@ export default function HomePage() {
     <>
       <Seo title="Home" path="/" jsonLd={organizationSchema()} />
       <HeroSection />
+      {/* Campaigns & Announcements — 2nd section, right after the hero.
+          Auto-hides when the admin has no active promo media. */}
+      <PromoShowcaseSection />
       <ShopByCategorySection />
       <FeaturedProductsSection />
       <WellnessBannerSection />
       <WhyChooseUsSection />
-      <PromoShowcaseSection />
       <CtaSection />
       <ContactPreviewSection />
     </>

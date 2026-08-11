@@ -26,11 +26,16 @@ async def list_products(
     search: Optional[str] = None,
     category_slug: Optional[str] = None,
     tag: Optional[str] = None,
+    featured: Optional[bool] = None,
     page: int = 1,
     page_size: int = 12,
 ) -> tuple[list[Product], int]:
     query = select(Product).options(selectinload(Product.category))
     count_query = select(func.count()).select_from(Product)
+
+    if featured is not None:
+        query = query.where(Product.is_featured.is_(featured))
+        count_query = count_query.where(Product.is_featured.is_(featured))
 
     if category_slug:
         query = query.join(Category, Product.category_id == Category.id).where(Category.slug == category_slug)

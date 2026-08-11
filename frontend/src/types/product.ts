@@ -25,6 +25,7 @@ export type Product = {
   ingredients: string[] | null
   usage_instructions: string | null
   warnings: string | null
+  is_featured: boolean
   created_at: string
   updated_at: string
 }
@@ -33,6 +34,7 @@ export type ProductListParams = {
   search?: string
   category?: string
   tag?: string
+  featured?: boolean
   page?: number
   page_size?: number
 }
@@ -57,6 +59,7 @@ export type ProductInput = {
   ingredients: string[] | null
   usage_instructions: string | null
   warnings: string | null
+  is_featured: boolean
 }
 
 export type ProductListResponse = {

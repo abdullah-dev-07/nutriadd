@@ -26,6 +26,7 @@ class ProductBase(BaseModel):
     ingredients: Optional[List[str]] = None
     usage_instructions: Optional[str] = None
     warnings: Optional[str] = None
+    is_featured: bool = False
 
 
 class ProductCreate(ProductBase):
@@ -50,6 +51,7 @@ class ProductUpdate(BaseModel):
     ingredients: Optional[List[str]] = None
     usage_instructions: Optional[str] = None
     warnings: Optional[str] = None
+    is_featured: Optional[bool] = None
 
 
 class ProductRead(BaseModel):
@@ -73,6 +75,7 @@ class ProductRead(BaseModel):
     ingredients: Optional[List[str]] = None
     usage_instructions: Optional[str] = None
     warnings: Optional[str] = None
+    is_featured: bool
     created_at: datetime
     updated_at: datetime
 

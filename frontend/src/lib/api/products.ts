@@ -11,6 +11,7 @@ export function getProducts(params: ProductListParams = {}) {
   if (params.search) query.set('search', params.search)
   if (params.category) query.set('category', params.category)
   if (params.tag) query.set('tag', params.tag)
+  if (params.featured !== undefined) query.set('featured', String(params.featured))
   query.set('page', String(params.page ?? 1))
   query.set('page_size', String(params.page_size ?? 12))
 

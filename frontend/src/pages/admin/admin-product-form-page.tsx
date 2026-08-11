@@ -30,6 +30,7 @@ const emptyForm: ProductInput = {
   ingredients: null,
   usage_instructions: null,
   warnings: null,
+  is_featured: false,
 }
 
 const linesToArray = (value: string) =>
@@ -89,6 +90,7 @@ export default function AdminProductFormPage() {
           ingredients: product.ingredients,
           usage_instructions: product.usage_instructions,
           warnings: product.warnings,
+          is_featured: product.is_featured,
         })
       } else {
         setForm((prev) => ({ ...prev, category_id: cats[0]?.id ?? '' }))
@@ -242,6 +244,24 @@ export default function AdminProductFormPage() {
             </select>
           </Field>
         </div>
+
+        <label className="border-border bg-card flex items-center gap-3 rounded-lg border p-4">
+          <input
+            type="checkbox"
+            checked={form.is_featured}
+            onChange={(e) => setField('is_featured', e.target.checked)}
+            className="border-input accent-brand-blue size-5 rounded"
+          />
+          <span>
+            <span className="text-charcoal block font-medium">
+              Featured product
+            </span>
+            <span className="text-slate block text-sm">
+              Show this product in the &ldquo;Featured Products&rdquo; section on
+              the home page.
+            </span>
+          </span>
+        </label>
 
         <Field label="Short description" required>
           <Input

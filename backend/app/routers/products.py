@@ -15,12 +15,19 @@ async def list_products(
     search: Optional[str] = Query(default=None),
     category: Optional[str] = Query(default=None),
     tag: Optional[str] = Query(default=None),
+    featured: Optional[bool] = Query(default=None),
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=12, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
 ) -> ProductListResponse:
     items, total = await product_service.list_products(
-        db, search=search, category_slug=category, tag=tag, page=page, page_size=page_size
+        db,
+        search=search,
+        category_slug=category,
+        tag=tag,
+        featured=featured,
+        page=page,
+        page_size=page_size,
     )
     return ProductListResponse(items=items, total=total, page=page, page_size=page_size)
 
