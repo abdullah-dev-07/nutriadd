@@ -1,3 +1,4 @@
+from app.models.address import Address
 from app.models.cart import Cart, CartItem
 from app.models.category import Category
 from app.models.contact_message import ContactMessage
@@ -8,6 +9,7 @@ from app.models.promo_media import MediaType, PromoMedia
 from app.models.user import User, UserRole
 
 __all__ = [
+    "Address",
     "Cart",
     "CartItem",
     "Category",

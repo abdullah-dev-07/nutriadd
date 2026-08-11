@@ -98,6 +98,14 @@ async def change_password(db: AsyncSession, user: User, current_password: str, n
     await db.commit()
 
 
+async def update_profile(db: AsyncSession, user: User, full_name: str) -> User:
+    user.full_name = full_name
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user
+
+
 async def send_reset_email(email: str, name: str, token: str) -> None:
     reset_url = f"{settings.SITE_URL.rstrip('/')}/reset-password?token={token}"
     await email_service.send_email(

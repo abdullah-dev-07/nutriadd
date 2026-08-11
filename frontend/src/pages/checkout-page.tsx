@@ -1,5 +1,11 @@
-import { Loader2, TriangleAlert } from 'lucide-react'
-import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { Check, Loader2, MapPinned, TriangleAlert } from 'lucide-react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 import { Container } from '@/components/shared/container'
@@ -10,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { getAddresses, type Address } from '@/lib/api/addresses'
 import { createOrder } from '@/lib/api/orders'
 import { ApiError } from '@/lib/api/client'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -47,6 +54,49 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<CheckoutFormErrors>({})
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const [addresses, setAddresses] = useState<Address[]>([])
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
+
+  // Load saved addresses and prefill from the default (or first) one.
+  useEffect(() => {
+    let cancelled = false
+    getAddresses()
+      .then((data) => {
+        if (cancelled || data.length === 0) return
+        setAddresses(data)
+        const preferred = data.find((a) => a.is_default) ?? data[0]
+        applyAddress(preferred)
+        setSelectedAddressId(preferred.id)
+      })
+      .catch(() => {
+        // Saved addresses are a convenience; fall back to manual entry silently.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  function applyAddress(address: Address) {
+    setValues((previous) => ({
+      ...previous,
+      customerName: address.full_name || previous.customerName,
+      customerPhone: address.phone,
+      shippingAddress: `${address.address}, ${address.city}`,
+    }))
+    setErrors((previous) => {
+      const next = { ...previous }
+      delete next.customerName
+      delete next.customerPhone
+      delete next.shippingAddress
+      return next
+    })
+  }
+
+  function handleSelectAddress(address: Address) {
+    setSelectedAddressId(address.id)
+    applyAddress(address)
+  }
 
   if (items.length === 0) {
     return <Navigate to="/cart" replace />
@@ -151,6 +201,53 @@ export default function CheckoutPage() {
               className="border-border rounded-2xl border bg-card p-6 shadow-sm md:p-8"
             >
               <h2 className="text-lg font-semibold">Shipping Details</h2>
+
+              {addresses.length > 0 && (
+                <div className="mt-6">
+                  <p className="text-slate flex items-center gap-2 text-sm font-medium">
+                    <MapPinned className="size-4" aria-hidden="true" />
+                    Use a saved address
+                  </p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {addresses.map((address) => {
+                      const selected = address.id === selectedAddressId
+                      return (
+                        <button
+                          key={address.id}
+                          type="button"
+                          onClick={() => handleSelectAddress(address)}
+                          aria-pressed={selected}
+                          className={`rounded-xl border p-4 text-left text-sm transition-colors ${
+                            selected
+                              ? 'border-brand-blue bg-brand-blue/5 ring-brand-blue/30 ring-2'
+                              : 'border-border hover:bg-mist'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-charcoal truncate font-semibold">
+                              {address.label?.trim() || address.full_name}
+                            </span>
+                            {selected && (
+                              <Check
+                                className="text-brand-blue size-4 shrink-0"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </div>
+                          <p className="text-slate mt-1 truncate">
+                            {address.address}, {address.city}
+                          </p>
+                          <p className="text-slate truncate">{address.phone}</p>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <p className="text-slate/70 mt-3 text-xs">
+                    Selecting an address fills in the fields below — you can still
+                    edit them before placing your order.
+                  </p>
+                </div>
+              )}
 
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 {fields.map((field) => {

@@ -40,6 +40,13 @@ export function me() {
   return apiFetch<UserRead>('/auth/me')
 }
 
+export function updateProfile(fullName: string) {
+  return apiFetch<UserRead>('/auth/me', {
+    method: 'PATCH',
+    body: { full_name: fullName },
+  })
+}
+
 export function changePassword(payload: {
   current_password: string
   new_password: string

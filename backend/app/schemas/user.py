@@ -12,6 +12,10 @@ class UserCreate(BaseModel):
     full_name: str = Field(min_length=1, max_length=255)
 
 
+class UserUpdate(BaseModel):
+    full_name: str = Field(min_length=1, max_length=255)
+
+
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

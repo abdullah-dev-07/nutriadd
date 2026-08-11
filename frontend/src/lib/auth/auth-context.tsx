@@ -25,6 +25,7 @@ type AuthState = {
 type AuthAction =
   | { type: 'LOADING' }
   | { type: 'AUTHENTICATED'; user: UserRead }
+  | { type: 'USER_UPDATED'; user: UserRead }
   | { type: 'UNAUTHENTICATED' }
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -33,6 +34,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return { ...state, status: 'loading' }
     case 'AUTHENTICATED':
       return { user: action.user, status: 'authenticated' }
+    case 'USER_UPDATED':
+      return { ...state, user: action.user }
     case 'UNAUTHENTICATED':
       return { user: null, status: 'unauthenticated' }
     default:
@@ -51,6 +54,7 @@ type AuthContextValue = {
   ) => Promise<void>
   logout: () => Promise<void>
   forgotPassword: (email: string) => Promise<void>
+  updateProfile: (fullName: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -185,6 +189,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authApi.forgotPassword(email)
   }, [])
 
+  const updateProfile = useCallback(async (fullName: string) => {
+    const user = await authApi.updateProfile(fullName)
+    dispatch({ type: 'USER_UPDATED', user })
+  }, [])
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user: state.user,
@@ -193,8 +202,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       logout,
       forgotPassword,
+      updateProfile,
     }),
-    [state.user, state.status, login, register, logout, forgotPassword]
+    [
+      state.user,
+      state.status,
+      login,
+      register,
+      logout,
+      forgotPassword,
+      updateProfile,
+    ]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

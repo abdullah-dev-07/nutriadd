@@ -16,6 +16,7 @@ from app.schemas.user import (
     ResetPasswordRequest,
     UserCreate,
     UserRead,
+    UserUpdate,
 )
 from app.services import auth_service
 
@@ -53,6 +54,15 @@ async def logout(payload: LogoutRequest) -> None:
 @router.get("/me", response_model=UserRead)
 async def me(current_user: User = Depends(get_current_user)) -> User:
     return current_user
+
+
+@router.patch("/me", response_model=UserRead)
+async def update_me(
+    payload: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> User:
+    return await auth_service.update_profile(db, current_user, payload.full_name)
 
 
 @router.post("/change-password", status_code=status.HTTP_204_NO_CONTENT)
