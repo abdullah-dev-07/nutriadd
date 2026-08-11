@@ -200,7 +200,7 @@ export default function AdminProductFormPage() {
               value={form.category_id}
               onChange={(e) => setField('category_id', e.target.value)}
               required
-              className="border-input text-charcoal focus-visible:border-brand-blue focus-visible:ring-ring/30 h-10 w-full rounded-lg border bg-white px-3.5 text-sm shadow-sm focus-visible:ring-2 focus-visible:outline-none"
+              className="border-input text-charcoal focus-visible:border-brand-blue focus-visible:ring-ring/30 h-10 w-full rounded-lg border bg-card px-3.5 text-sm shadow-sm focus-visible:ring-2 focus-visible:outline-none"
             >
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -235,7 +235,7 @@ export default function AdminProductFormPage() {
                   e.target.value as ProductInput['availability']
                 )
               }
-              className="border-input text-charcoal focus-visible:border-brand-blue focus-visible:ring-ring/30 h-10 w-full rounded-lg border bg-white px-3.5 text-sm shadow-sm focus-visible:ring-2 focus-visible:outline-none"
+              className="border-input text-charcoal focus-visible:border-brand-blue focus-visible:ring-ring/30 h-10 w-full rounded-lg border bg-card px-3.5 text-sm shadow-sm focus-visible:ring-2 focus-visible:outline-none"
             >
               <option value="in_stock">In stock</option>
               <option value="out_of_stock">Out of stock</option>

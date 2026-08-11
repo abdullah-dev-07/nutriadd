@@ -81,7 +81,7 @@ export default function ForgotPasswordPage() {
 
       <Section>
         <Container>
-          <div className="border-border mx-auto max-w-md rounded-3xl border bg-white p-10 shadow-sm">
+          <div className="border-border mx-auto max-w-md rounded-3xl border bg-card p-10 shadow-sm">
             {status === 'success' ? (
               <div className="text-center">
                 <span className="bg-accent text-brand-green-dark mx-auto flex size-14 items-center justify-center rounded-2xl">

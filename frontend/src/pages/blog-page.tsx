@@ -52,7 +52,7 @@ export default function BlogPage() {
                     'rounded-full border px-5 py-2 text-sm font-medium transition-colors',
                     isActive
                       ? 'bg-gradient-brand border-transparent text-white'
-                      : 'border-border text-slate hover:border-brand-blue hover:text-brand-blue bg-white'
+                      : 'border-border text-slate hover:border-brand-blue hover:text-brand-blue bg-card'
                   )}
                 >
                   {category}

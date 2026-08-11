@@ -162,4 +162,18 @@
   .container-px {
     @apply px-4 sm:px-6 lg:px-8;
   }
+
+  /*
+    Product image stage. Product photos have a baked-in WHITE background, so their
+    container must stay LIGHT in both themes — otherwise a white rectangle appears
+    on the dark card. This is the standard "product light-box" pattern (photography
+    on white, chrome dark). Light mode: pure white; dark mode: a soft warm-neutral
+    so it reads as an intentional light panel, not a harsh white block.
+  */
+  .product-stage {
+    background-color: #ffffff;
+  }
+  :root.dark .product-stage {
+    background-color: #eef1ec;
+  }
 }

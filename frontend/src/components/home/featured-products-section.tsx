@@ -70,7 +70,7 @@ export function FeaturedProductsSection() {
           )}
 
           {status === 'error' && (
-            <div className="border-border mx-auto flex max-w-lg flex-col items-center rounded-3xl border bg-white p-10 text-center shadow-sm">
+            <div className="border-border mx-auto flex max-w-lg flex-col items-center rounded-3xl border bg-card p-10 text-center shadow-sm">
               <span className="bg-destructive/10 text-destructive flex size-14 items-center justify-center rounded-2xl">
                 <TriangleAlert className="size-7" aria-hidden="true" />
               </span>

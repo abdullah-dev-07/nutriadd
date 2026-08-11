@@ -87,7 +87,7 @@ export default function LoginPage() {
 
       <Section>
         <Container>
-          <div className="border-border mx-auto max-w-md rounded-3xl border bg-white p-10 shadow-sm">
+          <div className="border-border mx-auto max-w-md rounded-3xl border bg-card p-10 shadow-sm">
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="email">

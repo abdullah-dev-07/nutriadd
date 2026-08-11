@@ -45,7 +45,7 @@ export function Footer() {
             <Link
               to="/"
               aria-label="NutriAdd — Life Care, home"
-              className="inline-flex rounded-xl bg-white p-3 shadow-sm"
+              className="inline-flex rounded-xl bg-card p-3 shadow-sm"
             >
               <Logo className="h-12 w-auto" />
             </Link>
@@ -59,7 +59,7 @@ export function Footer() {
                   <a
                     href={href}
                     aria-label={label}
-                    className="hover:bg-brand-green inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors"
+                    className="hover:bg-brand-green inline-flex size-9 items-center justify-center rounded-full bg-card/10 text-white transition-colors"
                   >
                     <Icon className="size-4" />
                   </a>

@@ -27,7 +27,7 @@ export function StorySection() {
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="border-border rounded-2xl border bg-white p-6 text-center shadow-sm"
+                className="border-border rounded-2xl border bg-card p-6 text-center shadow-sm"
               >
                 <p className="font-heading text-gradient-brand text-3xl font-bold">
                   {stat.value}

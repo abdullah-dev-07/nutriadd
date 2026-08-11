@@ -63,7 +63,7 @@ export function ShopByCategorySection() {
               <Reveal key={category.id} delay={Math.min(index, 6) * 0.05}>
                 <Link
                   to={`/products?category=${encodeURIComponent(category.slug)}`}
-                  className="border-border hover:border-brand-blue group flex h-full flex-col items-center gap-3 rounded-2xl border bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                  className="border-border hover:border-brand-blue group flex h-full flex-col items-center gap-3 rounded-2xl border bg-card p-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
                 >
                   <span className="bg-accent text-brand-blue group-hover:bg-gradient-brand flex size-14 items-center justify-center rounded-2xl transition-colors group-hover:text-white">
                     <Icon className="size-7" aria-hidden="true" />

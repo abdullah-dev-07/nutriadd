@@ -139,7 +139,7 @@ export default function CheckoutPage() {
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="border-border rounded-2xl border bg-white p-6 shadow-sm md:p-8"
+              className="border-border rounded-2xl border bg-card p-6 shadow-sm md:p-8"
             >
               <h2 className="text-lg font-semibold">Shipping Details</h2>
 
@@ -240,7 +240,7 @@ export default function CheckoutPage() {
               )}
             </form>
 
-            <div className="border-border h-fit rounded-2xl border bg-white p-6 shadow-sm">
+            <div className="border-border h-fit rounded-2xl border bg-card p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Order Summary</h2>
               <ul className="mt-4 space-y-3">
                 {items.map((item) => (

@@ -30,7 +30,7 @@ export default function CartPage() {
       <Section>
         <Container>
           {items.length === 0 ? (
-            <div className="border-border mx-auto flex max-w-xl flex-col items-center rounded-3xl border bg-white p-10 text-center shadow-sm md:p-14">
+            <div className="border-border mx-auto flex max-w-xl flex-col items-center rounded-3xl border bg-card p-10 text-center shadow-sm md:p-14">
               <span className="bg-gradient-brand flex size-16 items-center justify-center rounded-2xl text-white">
                 <ShoppingBag className="size-8" aria-hidden="true" />
               </span>
@@ -52,7 +52,7 @@ export default function CartPage() {
                 {items.map((item) => (
                   <div
                     key={item.productId}
-                    className="border-border flex flex-col gap-4 rounded-2xl border bg-white p-5 shadow-sm sm:flex-row sm:items-center"
+                    className="border-border flex flex-col gap-4 rounded-2xl border bg-card p-5 shadow-sm sm:flex-row sm:items-center"
                   >
                     <Link
                       to={`/products/${item.slug}`}
@@ -79,7 +79,7 @@ export default function CartPage() {
                     </div>
 
                     <div
-                      className="border-border inline-flex items-center self-start rounded-lg border bg-white"
+                      className="border-border inline-flex items-center self-start rounded-lg border bg-card"
                       role="group"
                       aria-label={`Quantity for ${item.name}`}
                     >
@@ -128,7 +128,7 @@ export default function CartPage() {
                 ))}
               </div>
 
-              <div className="border-border h-fit rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="border-border h-fit rounded-2xl border bg-card p-6 shadow-sm">
                 <h2 className="text-lg font-semibold">Order Summary</h2>
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="text-slate flex items-center justify-between">

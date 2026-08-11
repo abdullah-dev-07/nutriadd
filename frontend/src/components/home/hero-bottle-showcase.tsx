@@ -171,14 +171,27 @@ function PillBottle({
       animate={reduceMotion ? undefined : { y: [0, -18, 0] }}
       transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
     >
-      {/* Soft themed glow behind the bottle (no frame) */}
+      {/* Brand-tinted outer glow (elegant halo). */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-20"
         style={{
           background:
-            'radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--brand-blue) 30%, transparent), transparent 62%)',
-          filter: 'blur(28px)',
+            'radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--brand-blue) 28%, transparent), transparent 64%)',
+          filter: 'blur(34px)',
+        }}
+      />
+      {/* Soft LIGHT stage directly behind the product. In light mode it blends
+          invisibly into the hero; in dark mode it reads as a gentle spotlight the
+          bottle floats in. Crucially it gives mix-blend-multiply a light surface to
+          melt the photo's white background into, in BOTH themes. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.55) 42%, transparent 70%)',
+          filter: 'blur(6px)',
         }}
       />
 
@@ -190,7 +203,11 @@ function PillBottle({
               key={product.id}
               src={getProductImage(product.image_url, product.slug)}
               alt={product.name}
-              className="max-h-full w-auto object-contain drop-shadow-2xl"
+              // mix-blend-multiply blends the photo's baked-in WHITE background into
+              // the (light) hero surface, so only the bottle appears to float — no
+              // visible white rectangle. The drop-shadow filter gives it real depth.
+              className="max-h-full w-auto object-contain mix-blend-multiply"
+              style={{ filter: 'drop-shadow(0 25px 30px rgba(0,0,0,0.28))' }}
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 60, scale: 0.92 }}
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
               exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -60, scale: 0.92 }}

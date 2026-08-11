@@ -101,7 +101,7 @@ export default function AdminProductsPage() {
       {status === 'ready' && products.length > 0 && (
         <div className="border-border overflow-x-auto rounded-2xl border">
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-border text-slate border-b bg-white">
+            <thead className="border-border text-slate border-b bg-card">
               <tr>
                 <th className="px-4 py-3 font-medium">Product</th>
                 <th className="px-4 py-3 font-medium">Category</th>
@@ -110,7 +110,7 @@ export default function AdminProductsPage() {
                 <th className="px-4 py-3 text-right font-medium">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-border divide-y bg-white">
+            <tbody className="divide-border divide-y bg-card">
               {products.map((product) => (
                 <tr key={product.id}>
                   <td className="px-4 py-3">

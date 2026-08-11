@@ -23,7 +23,7 @@ export default function ContactPage() {
         <Container>
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <ContactInfo />
-            <div className="border-border rounded-3xl border bg-white p-6 shadow-sm sm:p-8">
+            <div className="border-border rounded-3xl border bg-card p-6 shadow-sm sm:p-8">
               <ContactForm />
             </div>
           </div>

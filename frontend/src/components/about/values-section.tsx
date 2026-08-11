@@ -17,7 +17,7 @@ export function ValuesSection() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {coreValues.map(({ icon: Icon, image, title, description }, index) => (
             <Reveal key={title} delay={index * 0.08}>
-              <article className="border-border h-full rounded-2xl border bg-white p-8 text-center shadow-sm transition-shadow hover:shadow-md">
+              <article className="border-border h-full rounded-2xl border bg-card p-8 text-center shadow-sm transition-shadow hover:shadow-md">
                 {image ? (
                   <img
                     src={image}

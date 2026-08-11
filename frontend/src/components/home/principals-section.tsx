@@ -28,7 +28,7 @@ export function PrincipalsSection() {
         <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
           {principals.map(({ name, category, logo }, index) => (
             <Reveal key={name} delay={index * 0.05}>
-              <article className="border-border flex h-full items-center gap-4 rounded-2xl border bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+              <article className="border-border flex h-full items-center gap-4 rounded-2xl border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
                 {logo ? (
                   <img
                     src={logo}
@@ -53,7 +53,7 @@ export function PrincipalsSection() {
         </div>
 
         <Reveal>
-          <div className="border-brand-blue/20 mt-10 flex flex-col items-center gap-4 rounded-2xl border bg-white p-8 text-center shadow-sm sm:flex-row sm:text-left">
+          <div className="border-brand-blue/20 mt-10 flex flex-col items-center gap-4 rounded-2xl border bg-card p-8 text-center shadow-sm sm:flex-row sm:text-left">
             <img
               src={fpcLogo}
               alt="FAMS Pharma Care (FPC) logo"

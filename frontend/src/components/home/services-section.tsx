@@ -17,7 +17,7 @@ export function ServicesSection() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {services.map(({ icon: Icon, title, description }, index) => (
             <Reveal key={title} delay={index * 0.08}>
-              <article className="group border-border h-full rounded-2xl border bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+              <article className="group border-border h-full rounded-2xl border bg-card p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
                 <span className="bg-mist text-brand-blue group-hover:bg-gradient-brand flex size-12 items-center justify-center rounded-xl transition-colors group-hover:text-white">
                   <Icon className="size-6" />
                 </span>

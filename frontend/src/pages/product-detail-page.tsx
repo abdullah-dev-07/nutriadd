@@ -163,7 +163,7 @@ export default function ProductDetailPage() {
           </nav>
 
           <div className="grid gap-10 md:grid-cols-2 md:gap-14">
-            <div className="bg-mist border-border overflow-hidden rounded-3xl border">
+            <div className="product-stage border-border overflow-hidden rounded-3xl border">
               <img
                 src={productImage}
                 alt={product.name}
@@ -200,7 +200,7 @@ export default function ProductDetailPage() {
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <div
-                  className="border-border inline-flex items-center rounded-lg border bg-white"
+                  className="border-border inline-flex items-center rounded-lg border bg-card"
                   role="group"
                   aria-label="Quantity"
                 >

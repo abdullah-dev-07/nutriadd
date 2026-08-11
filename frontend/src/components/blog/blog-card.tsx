@@ -8,10 +8,10 @@ export function BlogCard({ post }: { post: BlogPost }) {
   const href = `/blog/${post.slug}`
 
   return (
-    <article className="group border-border flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+    <article className="group border-border flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
       <Link to={href} tabIndex={-1} aria-hidden="true">
         <div className="bg-gradient-brand flex aspect-[16/9] items-end p-5">
-          <span className="text-brand-blue rounded-full bg-white/90 px-3 py-1 text-xs font-semibold">
+          <span className="text-brand-blue rounded-full bg-card/90 px-3 py-1 text-xs font-semibold">
             {post.category}
           </span>
         </div>

@@ -41,7 +41,7 @@ export function ContactPreviewSection() {
         <div className="mt-14 grid gap-6 sm:grid-cols-3">
           {contactCards.map(({ icon: Icon, title, lines }) => (
             <Reveal key={title}>
-              <div className="border-border flex h-full flex-col items-center rounded-2xl border bg-white p-8 text-center shadow-sm">
+              <div className="border-border flex h-full flex-col items-center rounded-2xl border bg-card p-8 text-center shadow-sm">
                 <span className="bg-gradient-brand flex size-12 items-center justify-center rounded-xl text-white">
                   <Icon className="size-6" />
                 </span>

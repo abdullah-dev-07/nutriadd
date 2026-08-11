@@ -47,7 +47,7 @@ export function IntroSection() {
             {coreValues.map(({ icon: Icon, image, title, description }) => (
               <li
                 key={title}
-                className="border-border flex gap-4 rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                className="border-border flex gap-4 rounded-2xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
               >
                 {image ? (
                   <img

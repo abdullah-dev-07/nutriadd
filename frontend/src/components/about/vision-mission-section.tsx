@@ -17,7 +17,7 @@ export function VisionMissionSection() {
         <div className="grid gap-6 md:grid-cols-2">
           {pillars.map(({ icon: Icon, title, text }, index) => (
             <Reveal key={title} delay={index * 0.1}>
-              <article className="border-border h-full rounded-2xl border bg-white p-8 shadow-sm">
+              <article className="border-border h-full rounded-2xl border bg-card p-8 shadow-sm">
                 <span className="bg-gradient-brand flex size-14 items-center justify-center rounded-2xl text-white">
                   <Icon className="size-7" />
                 </span>

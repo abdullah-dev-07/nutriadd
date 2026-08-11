@@ -14,8 +14,8 @@ export function ProductCard({ product }: { product: Product }) {
   const inStock = product.availability === 'in_stock'
 
   return (
-    <article className="group border-border flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-      <Link to={href} className="bg-mist relative block aspect-square overflow-hidden">
+    <article className="group border-border flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+      <Link to={href} className="product-stage relative block aspect-square overflow-hidden">
         <img
           src={getProductImage(product.image_url, product.slug)}
           alt={product.name}

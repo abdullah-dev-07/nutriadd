@@ -136,7 +136,7 @@ export default function AdminMediaPage() {
           </p>
         </div>
 
-        <div className="border-border space-y-3 rounded-2xl border bg-white p-5">
+        <div className="border-border space-y-3 rounded-2xl border bg-card p-5">
           <MediaUpload
             target="promo"
             accept="image/*,video/mp4"
@@ -254,7 +254,7 @@ export default function AdminMediaPage() {
             {showcase.map((item) => (
               <li
                 key={item.id}
-                className="border-border flex items-center gap-3 rounded-xl border bg-white p-3"
+                className="border-border flex items-center gap-3 rounded-xl border bg-card p-3"
               >
                 {item.media_type === 'video' ? (
                   <video
@@ -310,7 +310,7 @@ export default function AdminMediaPage() {
             the product form instead.
           </p>
         </div>
-        <div className="border-border space-y-3 rounded-2xl border bg-white p-5">
+        <div className="border-border space-y-3 rounded-2xl border bg-card p-5">
           <MediaUpload
             target="product"
             accept="image/*"

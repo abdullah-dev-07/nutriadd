@@ -57,7 +57,7 @@ export default function OrderDetailPage() {
   }, [id, reloadToken])
 
   return (
-    <div className="border-border rounded-2xl border bg-white p-6 shadow-sm md:p-8">
+    <div className="border-border rounded-2xl border bg-card p-6 shadow-sm md:p-8">
       <Seo title="Order Details" path={`/account/orders/${id ?? ''}`} noindex />
       <Link
         to="/account/orders"

@@ -20,7 +20,7 @@ export function HeroSection() {
 
       <Container className="grid items-center gap-12 py-20 md:py-28 lg:grid-cols-2 lg:gap-16">
         <div>
-          <span className="border-border text-slate inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 text-sm font-medium shadow-sm">
+          <span className="border-border text-slate inline-flex items-center gap-2 rounded-full border bg-card px-4 py-1.5 text-sm font-medium shadow-sm">
             <span className="bg-brand-green size-2 rounded-full" />
             Pharmaceuticals · Nutraceuticals · Healthcare
           </span>

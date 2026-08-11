@@ -17,7 +17,7 @@ export function IndustriesSection() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {industries.map(({ icon: Icon, title, description }, index) => (
             <Reveal key={title} delay={index * 0.06}>
-              <article className="border-border flex h-full gap-4 rounded-2xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+              <article className="border-border flex h-full gap-4 rounded-2xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
                 <span className="bg-accent text-brand-green-dark flex size-12 shrink-0 items-center justify-center rounded-xl">
                   <Icon className="size-6" />
                 </span>

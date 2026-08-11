@@ -55,7 +55,7 @@ export default function OrdersPage() {
   }, [reloadToken])
 
   return (
-    <div className="border-border rounded-2xl border bg-white p-6 shadow-sm md:p-8">
+    <div className="border-border rounded-2xl border bg-card p-6 shadow-sm md:p-8">
       <Seo title="My Orders" path="/account/orders" noindex />
       <h2 className="text-xl font-bold">My Orders</h2>
 

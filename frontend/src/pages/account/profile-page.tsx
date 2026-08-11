@@ -15,7 +15,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="border-border rounded-2xl border bg-white p-6 shadow-sm md:p-8">
+    <div className="border-border rounded-2xl border bg-card p-6 shadow-sm md:p-8">
       <Seo title="My Profile" path="/account" noindex />
       <div className="flex items-center gap-4">
         <span className="bg-gradient-brand flex size-14 items-center justify-center rounded-2xl text-white">

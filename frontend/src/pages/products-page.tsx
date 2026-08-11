@@ -141,7 +141,7 @@ export default function ProductsPage() {
                         'rounded-full border px-5 py-2 text-sm font-medium transition-colors',
                         isActive
                           ? 'bg-gradient-brand border-transparent text-white'
-                          : 'border-border text-slate hover:border-brand-blue hover:text-brand-blue bg-white'
+                          : 'border-border text-slate hover:border-brand-blue hover:text-brand-blue bg-card'
                       )}
                     >
                       {label}
@@ -167,7 +167,7 @@ export default function ProductsPage() {
             )}
 
             {status === 'error' && (
-              <div className="border-border mx-auto flex max-w-xl flex-col items-center rounded-3xl border bg-white p-10 text-center shadow-sm">
+              <div className="border-border mx-auto flex max-w-xl flex-col items-center rounded-3xl border bg-card p-10 text-center shadow-sm">
                 <span className="bg-destructive/10 text-destructive flex size-16 items-center justify-center rounded-2xl">
                   <TriangleAlert className="size-8" aria-hidden="true" />
                 </span>
@@ -189,7 +189,7 @@ export default function ProductsPage() {
             )}
 
             {status === 'success' && products.length === 0 && (
-              <div className="border-border mx-auto flex max-w-xl flex-col items-center rounded-3xl border bg-white p-10 text-center shadow-sm">
+              <div className="border-border mx-auto flex max-w-xl flex-col items-center rounded-3xl border bg-card p-10 text-center shadow-sm">
                 <span className="bg-gradient-brand flex size-16 items-center justify-center rounded-2xl text-white">
                   <PackageX className="size-8" aria-hidden="true" />
                 </span>
