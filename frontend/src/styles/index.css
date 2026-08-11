@@ -8,6 +8,7 @@
 
 :root {
   --radius: 0.75rem;
+  color-scheme: light;
 
   /* Raw brand palette — NutriAdd's authentic logo colors:
      the two halves of the pill logo = green #52B820 + blue #1875BB. */
@@ -39,6 +40,47 @@
   --border: #dcebd2;
   --input: #dcebd2;
   --ring: #1875bb;
+}
+
+/*
+  Dark mode — applied via the `.dark` class on <html> (see ThemeProvider).
+  Elegant, on-brand: a deep green-tinted charcoal ground (not pure black),
+  slightly lifted brand green/blue for contrast on dark, elevated cards, and
+  softened green-tinted borders. Only the token values change; every component
+  that uses the semantic tokens (bg-background, bg-card, text-foreground,
+  text-muted-foreground, border-border, bg-mist, text-charcoal) flips automatically.
+*/
+:root.dark {
+  color-scheme: dark;
+
+  /* Brand accents lifted for legibility on dark; gradient stays green→blue. */
+  --brand-green: #6fd233;
+  --brand-green-dark: #52b820;
+  --brand-blue: #3a9be0;
+  --brand-blue-dark: #1875bb;
+  --charcoal: #eaf3ea; /* primary ink becomes light */
+  --slate: #9fb0a6; /* secondary ink, faint green tint */
+  --mist: #13201a; /* soft surface becomes deep green-charcoal */
+
+  --background: #0b140f; /* deep green-tinted charcoal ground */
+  --foreground: #eaf3ea;
+  --card: #12201a;
+  --card-foreground: #eaf3ea;
+  --popover: #12201a;
+  --popover-foreground: #eaf3ea;
+  --primary: #3a9be0;
+  --primary-foreground: #06110b;
+  --secondary: #13201a;
+  --secondary-foreground: #eaf3ea;
+  --muted: #12201a;
+  --muted-foreground: #9fb0a6;
+  --accent: #14301a;
+  --accent-foreground: #8fe25a;
+  --destructive: #f87171;
+  --destructive-foreground: #06110b;
+  --border: #21362a;
+  --input: #21362a;
+  --ring: #3a9be0;
 }
 
 @theme inline {

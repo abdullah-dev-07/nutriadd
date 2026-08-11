@@ -13,6 +13,7 @@ import { mainNav } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
 
 import { Logo } from './logo'
+import { ThemeToggle } from './theme-toggle'
 
 const MENU_ID = 'primary-mobile-menu'
 
@@ -41,7 +42,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full border-b border-transparent bg-white/85 backdrop-blur-md transition-all',
+        'bg-background/85 sticky top-0 z-50 w-full border-b border-transparent backdrop-blur-md transition-all',
         scrolled && 'border-border shadow-sm'
       )}
     >
@@ -72,6 +73,7 @@ export function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-4 md:flex">
+            <ThemeToggle />
             <Link
               to="/cart"
               className="text-charcoal hover:text-brand-blue focus-visible:ring-ring relative rounded-md p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
@@ -113,16 +115,19 @@ export function Navbar() {
             </Button>
           </div>
 
-          <button
-            type="button"
-            className="text-charcoal hover:bg-mist focus-visible:ring-ring inline-flex items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none md:hidden"
-            aria-expanded={open}
-            aria-controls={MENU_ID}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            onClick={() => setOpen((value) => !value)}
-          >
-            {open ? <X className="size-6" /> : <Menu className="size-6" />}
-          </button>
+          <div className="flex items-center gap-1 md:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="text-charcoal hover:bg-mist focus-visible:ring-ring inline-flex items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              aria-expanded={open}
+              aria-controls={MENU_ID}
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              onClick={() => setOpen((value) => !value)}
+            >
+              {open ? <X className="size-6" /> : <Menu className="size-6" />}
+            </button>
+          </div>
         </div>
       </Container>
 
@@ -134,7 +139,7 @@ export function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="border-border overflow-hidden border-t bg-white md:hidden"
+            className="border-border bg-background overflow-hidden border-t md:hidden"
           >
             <Container>
               <nav

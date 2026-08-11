@@ -84,7 +84,7 @@ export function HeroBottleShowcase() {
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
           animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="border-border bg-white/95 absolute right-0 -bottom-4 left-0 mx-auto max-w-sm rounded-2xl border p-5 shadow-xl backdrop-blur sm:right-2 sm:left-auto sm:w-72"
+          className="border-border bg-card/95 absolute right-0 -bottom-4 left-0 mx-auto max-w-sm rounded-2xl border p-5 shadow-xl backdrop-blur sm:right-2 sm:left-auto sm:w-72"
         >
           <div className="flex items-center justify-between gap-2">
             <p className="text-brand-green-dark text-xs font-semibold tracking-wide uppercase">
@@ -156,7 +156,7 @@ export function HeroBottleShowcase() {
   )
 }
 
-/* ---------- 3D CSS pill bottle ---------- */
+/* ---------- Floating product bottle (no container) ---------- */
 
 function PillBottle({
   product,
@@ -167,63 +167,45 @@ function PillBottle({
 }) {
   return (
     <motion.div
-      className="relative"
-      style={{ transformStyle: 'preserve-3d' }}
-      animate={reduceMotion ? undefined : { y: [0, -16, 0] }}
+      className="relative flex items-center justify-center"
+      animate={reduceMotion ? undefined : { y: [0, -18, 0] }}
       transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
     >
-      {/* Glow */}
+      {/* Soft themed glow behind the bottle (no frame) */}
       <div
         aria-hidden="true"
-        className="bg-gradient-brand absolute -inset-8 -z-10 rounded-full opacity-20 blur-3xl"
-      />
-
-      {/* Bottle body (CSS 3D capsule) */}
-      <div
-        className="relative flex h-80 w-52 items-center justify-center rounded-[2.5rem] border border-white/40 shadow-2xl sm:h-96 sm:w-60"
+        className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            'linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.15))',
-          backdropFilter: 'blur(6px)',
-          transform: 'rotateX(6deg) rotateY(-12deg)',
-          transformStyle: 'preserve-3d',
+            'radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--brand-blue) 30%, transparent), transparent 62%)',
+          filter: 'blur(28px)',
         }}
-      >
-        {/* Cap */}
-        <div
-          aria-hidden="true"
-          className="bg-gradient-brand absolute -top-6 left-1/2 h-12 w-28 -translate-x-1/2 rounded-t-2xl rounded-b-lg shadow-lg"
-          style={{ transform: 'translateZ(10px)' }}
-        />
-        {/* Highlight streak */}
-        <div
-          aria-hidden="true"
-          className="absolute top-6 left-6 h-3/4 w-6 rounded-full bg-white/40 blur-md"
-        />
-        {/* Product image inside the bottle */}
+      />
+
+      {/* Just the floating product image — no capsule, cap or container */}
+      <div className="relative flex h-80 w-full items-center justify-center sm:h-[26rem]">
         <AnimatePresence mode="wait">
           {product && (
             <motion.img
               key={product.id}
               src={getProductImage(product.image_url, product.slug)}
               alt={product.name}
-              className="max-h-[78%] w-auto object-contain drop-shadow-xl"
-              style={{ transform: 'translateZ(30px)' }}
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: 20 }}
-              animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="max-h-full w-auto object-contain drop-shadow-2xl"
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 60, scale: 0.92 }}
+              animate={reduceMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -60, scale: 0.92 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               draggable={false}
             />
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Floor reflection */}
-      <div
-        aria-hidden="true"
-        className="mx-auto mt-4 h-6 w-32 rounded-[100%] bg-black/15 blur-md"
-      />
+        {/* Soft floor shadow so it reads as floating, not pasted */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-2 left-1/2 h-5 w-40 -translate-x-1/2 rounded-[100%] bg-black/15 blur-md dark:bg-black/40"
+        />
+      </div>
     </motion.div>
   )
 }
