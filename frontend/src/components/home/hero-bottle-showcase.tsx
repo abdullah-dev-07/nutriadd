@@ -171,31 +171,23 @@ function PillBottle({
       animate={reduceMotion ? undefined : { y: [0, -18, 0] }}
       transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
     >
-      {/* Brand-tinted outer glow (elegant halo). */}
+      {/* Soft glow "stage" (NOT a hard card): a subtle radial halo behind the
+          bottle so it reads as intentionally floating in both light and dark. The
+          photo's own light background fades into this glow rather than showing a
+          hard-edged box. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           background:
-            'radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--brand-blue) 28%, transparent), transparent 64%)',
-          filter: 'blur(34px)',
-        }}
-      />
-      {/* Soft LIGHT stage directly behind the product. In light mode it blends
-          invisibly into the hero; in dark mode it reads as a gentle spotlight the
-          bottle floats in. Crucially it gives mix-blend-multiply a light surface to
-          melt the photo's white background into, in BOTH themes. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.55) 42%, transparent 70%)',
-          filter: 'blur(6px)',
+            'radial-gradient(circle, color-mix(in srgb, var(--brand-blue) 16%, transparent) 0%, transparent 68%)',
+          filter: 'blur(30px)',
         }}
       />
 
-      {/* Just the floating product image — no capsule, cap or container */}
+      {/* Floating product image — no box/card behind it. A soft radial mask fades
+          the photo's outer (white) edges into transparency so it reads as floating,
+          not a pasted rectangle, and a drop-shadow gives it real 3D depth. */}
       <div className="relative flex h-80 w-full items-center justify-center sm:h-[26rem]">
         <AnimatePresence mode="wait">
           {product && (
@@ -203,11 +195,16 @@ function PillBottle({
               key={product.id}
               src={getProductImage(product.image_url, product.slug)}
               alt={product.name}
-              // mix-blend-multiply blends the photo's baked-in WHITE background into
-              // the (light) hero surface, so only the bottle appears to float — no
-              // visible white rectangle. The drop-shadow filter gives it real depth.
-              className="max-h-full w-auto object-contain mix-blend-multiply"
-              style={{ filter: 'drop-shadow(0 25px 30px rgba(0,0,0,0.28))' }}
+              className="max-h-full w-auto object-contain"
+              style={{
+                filter: 'drop-shadow(0 30px 35px rgba(0,0,0,0.22))',
+                // Fade the outer edges (where the flat white background lives) so
+                // the bottle blends into the glow instead of showing a hard box.
+                WebkitMaskImage:
+                  'radial-gradient(ellipse 72% 82% at 50% 50%, #000 62%, transparent 100%)',
+                maskImage:
+                  'radial-gradient(ellipse 72% 82% at 50% 50%, #000 62%, transparent 100%)',
+              }}
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 60, scale: 0.92 }}
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
               exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -60, scale: 0.92 }}
@@ -216,12 +213,6 @@ function PillBottle({
             />
           )}
         </AnimatePresence>
-
-        {/* Soft floor shadow so it reads as floating, not pasted */}
-        <div
-          aria-hidden="true"
-          className="absolute bottom-2 left-1/2 h-5 w-40 -translate-x-1/2 rounded-[100%] bg-black/15 blur-md dark:bg-black/40"
-        />
       </div>
     </motion.div>
   )
