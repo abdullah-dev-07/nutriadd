@@ -1,28 +1,13 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Leaf, Plus, ShieldCheck } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { HeroBottleShowcase } from '@/components/home/hero-bottle-showcase'
 import { Container } from '@/components/shared/container'
 import { Button } from '@/components/ui/button'
 import { stats } from '@/lib/data/stats'
 import { siteConfig } from '@/lib/site-config'
 
-const floatingCards = [
-  {
-    icon: ShieldCheck,
-    label: '15+ Years of Trust',
-    className: 'left-0 top-10',
-  },
-  {
-    icon: Leaf,
-    label: 'Naturally Focused Care',
-    className: 'bottom-8 right-0',
-  },
-]
-
 export function HeroSection() {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
     <section className="bg-mist relative overflow-hidden">
       <div
@@ -75,43 +60,7 @@ export function HeroSection() {
           </dl>
         </div>
 
-        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div className="bg-gradient-brand relative aspect-square overflow-hidden rounded-[2rem] shadow-xl">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage:
-                  'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-                backgroundSize: '24px 24px',
-              }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Plus
-                className="size-40 text-white/90"
-                strokeWidth={1.5}
-                aria-hidden="true"
-              />
-            </div>
-          </div>
-
-          {floatingCards.map(({ icon: Icon, label, className }) => (
-            <motion.div
-              key={label}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-              animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className={`border-border absolute flex items-center gap-3 rounded-xl border bg-white/95 px-4 py-3 shadow-lg backdrop-blur ${className}`}
-            >
-              <span className="bg-mist text-brand-blue flex size-9 items-center justify-center rounded-lg">
-                <Icon className="size-5" />
-              </span>
-              <span className="text-charcoal text-sm font-semibold">
-                {label}
-              </span>
-            </motion.div>
-          ))}
-        </div>
+        <HeroBottleShowcase />
       </Container>
     </section>
   )
