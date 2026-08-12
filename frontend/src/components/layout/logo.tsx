@@ -2,43 +2,43 @@ import logoImage from '@/assets/nutriadd-logo.jpg'
 import { cn } from '@/lib/utils'
 
 /**
- * The logo asset is a JPG with a baked-in WHITE background, so it can't be
- * dropped straight onto a tinted or dark surface without showing a white box.
+ * The logo asset is a JPG that bakes in BOTH a white background AND near-black
+ * "Life Care" text. That combination means no single CSS blend can cleanly drop
+ * the background on every surface (multiply erases the black text; screen keeps
+ * the white box). So we treat the two surface types differently:
  *
- * We neutralize the white with CSS blend modes instead of editing the asset:
- *   - `multiply` drops white to transparent on LIGHT surfaces while keeping the
- *     colored pill mark intact.
- *   - `screen` does the inverse for DARK surfaces.
+ *   surface="navbar"  — follows the theme:
+ *       • light theme: `multiply` blends the white into the light navbar (flush).
+ *       • dark theme:  the blend can't win (see above), so we sit the logo on a
+ *         soft rounded light chip — an intentional brand lockup, not a raw box.
  *
- * `on` picks the blend by the surrounding surface:
- *   - "auto" (default): multiply on light theme, screen on dark theme — for the
- *     navbar, whose background follows the theme. Handled by the `.logo-blend`
- *     utility (see styles/index.css).
- *   - "dark": always `screen` — for a permanently dark surface like the footer,
- *     which stays dark in both themes.
+ *   surface="dark"    — a permanently-dark surface (the footer, dark in both
+ *       themes): always uses the light chip so the whole logo stays legible.
+ *
+ * The light chip is provided by the `.logo-chip` utility (see styles/index.css),
+ * which is inert in light mode and only paints in dark mode / on dark surfaces.
  */
-type LogoTone = 'auto' | 'dark'
-
-const blendClasses: Record<LogoTone, string> = {
-  auto: 'logo-blend',
-  dark: 'mix-blend-screen',
-}
+type LogoSurface = 'navbar' | 'dark'
 
 export function Logo({
   className,
-  on = 'auto',
+  surface = 'navbar',
 }: {
   className?: string
-  on?: LogoTone
+  surface?: LogoSurface
 }) {
+  const chipClass = surface === 'dark' ? 'logo-chip-always' : 'logo-chip'
+
   return (
-    <img
-      src={logoImage}
-      alt="NutriAdd — Life Care"
-      width={1742}
-      height={1031}
-      decoding="async"
-      className={cn('h-11 w-auto', blendClasses[on], className)}
-    />
+    <span className={cn('inline-flex', chipClass)}>
+      <img
+        src={logoImage}
+        alt="NutriAdd — Life Care"
+        width={1742}
+        height={1031}
+        decoding="async"
+        className={cn('h-11 w-auto', 'logo-blend', className)}
+      />
+    </span>
   )
 }

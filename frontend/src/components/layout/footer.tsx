@@ -47,7 +47,7 @@ export function Footer() {
               aria-label="NutriAdd — Life Care, home"
               className="focus-visible:ring-ring inline-flex rounded-xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              <Logo className="h-12 w-auto" on="dark" />
+              <Logo className="h-12 w-auto" surface="dark" />
             </Link>
             <p className="mt-5 max-w-xs text-sm leading-relaxed">
               {tagline}. Delivering trusted pharmaceutical, nutraceutical and

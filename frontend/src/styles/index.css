@@ -181,17 +181,43 @@
   }
 
   /*
-    Logo white-background remover for theme-following surfaces (the navbar).
-    The logo JPG has a baked-in white background; `multiply` drops white to
-    transparent on the light navbar, and on dark we switch to `screen`, which
-    drops the near-white on the dark navbar instead. Result: the logo sits flush
-    on the navbar with no white card, in both themes.
+    Logo surface handling. The logo JPG bakes in a white background AND near-black
+    "Life Care" text, so no single blend works on every surface (see logo.tsx).
+
+    LIGHT theme: `multiply` blends the white background into the light navbar so
+    the logo sits flush with no visible box.
+
+    DARK theme / dark surfaces: the blend is disabled and the logo instead sits on
+    a soft rounded light chip, so its baked-in white background reads as an
+    intentional brand lockup rather than a raw white rectangle — and every part
+    of the mark (including the dark "Life Care" text) stays legible.
   */
   .logo-blend {
     mix-blend-mode: multiply;
   }
   :root.dark .logo-blend {
-    mix-blend-mode: screen;
+    mix-blend-mode: normal;
+  }
+
+  /* Base chip shape, inert until a light chip is actually painted. */
+  .logo-chip,
+  .logo-chip-always {
+    border-radius: 0.6rem;
+    transition: background-color 0.2s ease;
+  }
+
+  /* Navbar chip: only appears in dark mode. */
+  :root.dark .logo-chip {
+    background-color: #f4f8f2;
+    padding: 0.3rem 0.55rem;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+  }
+
+  /* Permanently-dark surfaces (footer): light chip in BOTH themes. */
+  .logo-chip-always {
+    background-color: #f4f8f2;
+    padding: 0.4rem 0.65rem;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
   }
 
   /*
