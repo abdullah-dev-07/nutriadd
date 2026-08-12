@@ -154,6 +154,20 @@ export function Footer() {
             ))}
           </ul>
         </div>
+
+        <div className="mt-6 text-center text-xs text-white/50">
+          <p>
+            Designed &amp; developed by{' '}
+            <a
+              href="https://datxoc.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-brand-green font-medium text-white/70 transition-colors"
+            >
+              DATXOC
+            </a>
+          </p>
+        </div>
       </Container>
     </footer>
   )
