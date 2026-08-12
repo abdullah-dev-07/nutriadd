@@ -1,5 +1,5 @@
 import { siteConfig } from '@/lib/site-config'
-import { type BlogPost } from '@/types/content'
+import { type BlogPost, type FaqItem } from '@/types/content'
 import { type Product } from '@/types/product'
 
 export function organizationSchema() {
@@ -100,6 +100,21 @@ export function blogPostingSchema(post: BlogPost, url: string) {
     },
     mainEntityOfPage: url,
     articleSection: post.category,
+  }
+}
+
+export function faqPageSchema(faqs: FaqItem[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
   }
 }
 

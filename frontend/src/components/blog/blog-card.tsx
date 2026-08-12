@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarDays, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { BlogImage } from '@/components/blog/blog-image'
 import { formatDate } from '@/lib/format'
 import { type BlogPost } from '@/types/content'
 
@@ -10,8 +11,14 @@ export function BlogCard({ post }: { post: BlogPost }) {
   return (
     <article className="group border-border flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
       <Link to={href} tabIndex={-1} aria-hidden="true">
-        <div className="bg-gradient-brand flex aspect-[16/9] items-end p-5">
-          <span className="text-brand-blue rounded-full bg-card/90 px-3 py-1 text-xs font-semibold">
+        <div className="relative aspect-[16/9] overflow-hidden">
+          <BlogImage
+            image={post.heroImage}
+            illustration={post.heroIllustration}
+            alt={post.title}
+            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <span className="text-brand-blue absolute bottom-4 left-4 rounded-full bg-card/90 px-3 py-1 text-xs font-semibold shadow-sm">
             {post.category}
           </span>
         </div>

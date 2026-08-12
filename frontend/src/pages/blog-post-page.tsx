@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 
 import { BlogCard } from '@/components/blog/blog-card'
 import { BlogContent } from '@/components/blog/blog-content'
+import { BlogFaq } from '@/components/blog/blog-faq'
+import { BlogImage } from '@/components/blog/blog-image'
 import { Container } from '@/components/shared/container'
 import { CtaBand } from '@/components/shared/cta-band'
 import { Reveal } from '@/components/shared/reveal'
@@ -12,7 +14,7 @@ import { Seo } from '@/components/shared/seo'
 import { Button } from '@/components/ui/button'
 import { getPostBySlug, getRelatedPosts } from '@/lib/data/blog'
 import { formatDate } from '@/lib/format'
-import { blogPostingSchema } from '@/lib/structured-data'
+import { blogPostingSchema, faqPageSchema } from '@/lib/structured-data'
 import { siteConfig } from '@/lib/site-config'
 
 export default function BlogPostPage() {
@@ -41,6 +43,13 @@ export default function BlogPostPage() {
   const relatedPosts = getRelatedPosts(post.slug)
   const postPath = `/blog/${post.slug}`
 
+  const jsonLd: object[] = [
+    blogPostingSchema(post, `${siteConfig.url}${postPath}`),
+  ]
+  if (post.faqs && post.faqs.length > 0) {
+    jsonLd.push(faqPageSchema(post.faqs))
+  }
+
   return (
     <>
       <Seo
@@ -48,7 +57,7 @@ export default function BlogPostPage() {
         description={post.excerpt}
         path={postPath}
         type="article"
-        jsonLd={blogPostingSchema(post, `${siteConfig.url}${postPath}`)}
+        jsonLd={jsonLd}
       />
       <article>
         <Section tone="muted" className="pb-14">
@@ -90,12 +99,20 @@ export default function BlogPostPage() {
 
         <Section className="pt-14">
           <Container>
-            <div
-              className="bg-gradient-brand mx-auto mb-12 aspect-[21/9] max-w-4xl rounded-3xl shadow-md"
-              aria-hidden="true"
-            />
+            <div className="border-border mx-auto mb-12 max-w-4xl overflow-hidden rounded-3xl border shadow-md">
+              <BlogImage
+                image={post.heroImage}
+                illustration={post.heroIllustration}
+                alt={post.title}
+                eager
+                className="aspect-21/9 w-full object-cover"
+              />
+            </div>
             <div className="mx-auto max-w-3xl">
               <BlogContent blocks={post.content} />
+              {post.faqs && post.faqs.length > 0 && (
+                <BlogFaq faqs={post.faqs} />
+              )}
             </div>
           </Container>
         </Section>
