@@ -9,7 +9,9 @@ type SectionProps = ComponentProps<'section'> & {
 const toneClasses: Record<NonNullable<SectionProps['tone']>, string> = {
   default: 'bg-background',
   muted: 'bg-mist',
-  dark: 'bg-charcoal text-white',
+  // Fixed dark band — stays dark in BOTH themes (bg-charcoal would flip to a
+  // light surface in dark mode, hiding the white text).
+  dark: 'bg-surface-dark text-surface-dark-foreground',
 }
 
 export function Section({

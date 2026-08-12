@@ -18,7 +18,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
             alt={post.title}
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <span className="text-brand-blue absolute bottom-4 left-4 rounded-full bg-card/90 px-3 py-1 text-xs font-semibold shadow-sm">
+          <span className="text-brand-blue absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold shadow-sm">
             {post.category}
           </span>
         </div>

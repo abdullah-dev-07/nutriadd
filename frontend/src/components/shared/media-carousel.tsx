@@ -95,7 +95,7 @@ export function MediaCarousel({
   return (
     <div
       className={cn(
-        'group bg-charcoal relative overflow-hidden rounded-3xl shadow-xl',
+        'group bg-surface-dark relative overflow-hidden rounded-3xl shadow-xl',
         className
       )}
       role="group"
@@ -151,7 +151,7 @@ export function MediaCarousel({
             type="button"
             onClick={() => paginate(-1)}
             aria-label="Previous slide"
-            className="text-charcoal absolute top-1/2 left-3 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-card/85 opacity-0 shadow-md backdrop-blur transition-opacity group-hover:opacity-100 hover:bg-card focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="text-slate-800 absolute top-1/2 left-3 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 opacity-0 shadow-md backdrop-blur transition-opacity group-hover:opacity-100 hover:bg-white focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
             <ChevronLeft className="size-5" />
           </button>
@@ -159,7 +159,7 @@ export function MediaCarousel({
             type="button"
             onClick={() => paginate(1)}
             aria-label="Next slide"
-            className="text-charcoal absolute top-1/2 right-3 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-card/85 opacity-0 shadow-md backdrop-blur transition-opacity group-hover:opacity-100 hover:bg-card focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="text-slate-800 absolute top-1/2 right-3 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 opacity-0 shadow-md backdrop-blur transition-opacity group-hover:opacity-100 hover:bg-white focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
             <ChevronRight className="size-5" />
           </button>
@@ -175,8 +175,8 @@ export function MediaCarousel({
                 className={cn(
                   'h-2 rounded-full transition-all focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none',
                   dotIndex === activeIndex
-                    ? 'w-6 bg-card'
-                    : 'w-2 bg-card/50 hover:bg-card/80'
+                    ? 'w-6 bg-white'
+                    : 'w-2 bg-white/50 hover:bg-white/80'
                 )}
               />
             ))}

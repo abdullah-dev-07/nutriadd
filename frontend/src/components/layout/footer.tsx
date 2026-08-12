@@ -38,16 +38,16 @@ export function Footer() {
   const { address, phones, email } = contact
 
   return (
-    <footer className="bg-charcoal text-white/70">
+    <footer className="bg-surface-dark text-white/70">
       <Container className="py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:pr-6">
             <Link
               to="/"
               aria-label="NutriAdd — Life Care, home"
-              className="inline-flex rounded-xl bg-card p-3 shadow-sm"
+              className="focus-visible:ring-ring inline-flex rounded-xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              <Logo className="h-12 w-auto" />
+              <Logo className="h-12 w-auto" on="dark" />
             </Link>
             <p className="mt-5 max-w-xs text-sm leading-relaxed">
               {tagline}. Delivering trusted pharmaceutical, nutraceutical and
@@ -59,7 +59,7 @@ export function Footer() {
                   <a
                     href={href}
                     aria-label={label}
-                    className="hover:bg-brand-green inline-flex size-9 items-center justify-center rounded-full bg-card/10 text-white transition-colors"
+                    className="hover:bg-brand-green inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors"
                   >
                     <Icon className="size-4" />
                   </a>

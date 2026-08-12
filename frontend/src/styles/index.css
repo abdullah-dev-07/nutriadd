@@ -20,6 +20,12 @@
   --slate: #4a5568;
   --mist: #eef8e8; /* soft green-tinted surface */
 
+  /* Permanently-dark surface (footer, "dark" section tone). Unlike --charcoal,
+     these DON'T flip in dark mode — a dark band should read as dark in both
+     themes. In dark mode they only deepen slightly to sit below --background. */
+  --surface-dark: #12211a;
+  --surface-dark-foreground: #eaf3ea;
+
   /* Semantic tokens (shadcn/ui contract) */
   --background: #f6fef2; /* clean white with a subtle green tint (pharma-clean) */
   --foreground: #1b2420;
@@ -54,33 +60,42 @@
   color-scheme: dark;
 
   /* Brand accents lifted for legibility on dark; gradient stays green→blue. */
-  --brand-green: #6fd233;
-  --brand-green-dark: #52b820;
-  --brand-blue: #3a9be0;
-  --brand-blue-dark: #1875bb;
-  --charcoal: #eaf3ea; /* primary ink becomes light */
-  --slate: #9fb0a6; /* secondary ink, faint green tint */
-  --mist: #13201a; /* soft surface becomes deep green-charcoal */
+  --brand-green: #7ad63f;
+  --brand-green-dark: #5fbf2a;
+  --brand-blue: #4aa8ea;
+  --brand-blue-dark: #2f86c9;
+  --charcoal: #eef5ee; /* primary ink becomes light */
+  --slate: #a7b7ad; /* secondary ink, faint green tint */
+  --mist: #182a22; /* soft surface: sits ABOVE the ground, below cards */
 
-  --background: #0b140f; /* deep green-tinted charcoal ground */
-  --foreground: #eaf3ea;
-  --card: #12201a;
-  --card-foreground: #eaf3ea;
-  --popover: #12201a;
-  --popover-foreground: #eaf3ea;
-  --primary: #3a9be0;
+  /* A three-step elevation ladder so sections read distinctly rather than
+     blending into one murky field:
+       background (#0f1a15, deepest)  <  mist (#182a22)  <  card (#1c2c25).
+     Borders and inks are tuned to keep AA contrast on all three. */
+  --background: #0f1a15; /* deep green-tinted charcoal ground */
+  --foreground: #eef5ee;
+  --card: #1c2c25; /* clearly lifted above the ground */
+  --card-foreground: #eef5ee;
+  --popover: #1c2c25;
+  --popover-foreground: #eef5ee;
+  --primary: #4aa8ea;
   --primary-foreground: #06110b;
-  --secondary: #13201a;
-  --secondary-foreground: #eaf3ea;
-  --muted: #12201a;
-  --muted-foreground: #9fb0a6;
-  --accent: #14301a;
-  --accent-foreground: #8fe25a;
+  --secondary: #182a22;
+  --secondary-foreground: #eef5ee;
+  --muted: #182a22;
+  --muted-foreground: #a7b7ad;
+  --accent: #1d3a24;
+  --accent-foreground: #9cea66;
   --destructive: #f87171;
   --destructive-foreground: #06110b;
-  --border: #21362a;
-  --input: #21362a;
-  --ring: #3a9be0;
+  --border: #2b4234; /* visible against both ground and card */
+  --input: #2b4234;
+  --ring: #4aa8ea;
+
+  /* Permanently-dark surface deepens slightly so the footer/dark band still
+     separates from the (now dark) page ground above it. */
+  --surface-dark: #0a120e;
+  --surface-dark-foreground: #eef5ee;
 }
 
 @theme inline {
@@ -94,6 +109,8 @@
   --color-charcoal: var(--charcoal);
   --color-slate: var(--slate);
   --color-mist: var(--mist);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-dark-foreground: var(--surface-dark-foreground);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -161,6 +178,20 @@
 
   .container-px {
     @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /*
+    Logo white-background remover for theme-following surfaces (the navbar).
+    The logo JPG has a baked-in white background; `multiply` drops white to
+    transparent on the light navbar, and on dark we switch to `screen`, which
+    drops the near-white on the dark navbar instead. Result: the logo sits flush
+    on the navbar with no white card, in both themes.
+  */
+  .logo-blend {
+    mix-blend-mode: multiply;
+  }
+  :root.dark .logo-blend {
+    mix-blend-mode: screen;
   }
 
   /*

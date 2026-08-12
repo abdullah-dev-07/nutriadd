@@ -30,8 +30,8 @@ export function WhyChooseUsSection() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map(({ icon: Icon, title, description }, index) => (
             <Reveal key={title} delay={index * 0.06}>
-              <article className="h-full rounded-2xl border border-white/10 bg-card/5 p-7 transition-colors hover:bg-card/10">
-                <span className="text-brand-green flex size-12 items-center justify-center rounded-xl bg-card/10">
+              <article className="h-full rounded-2xl border border-white/10 bg-white/5 p-7 transition-colors hover:bg-white/10">
+                <span className="text-brand-green flex size-12 items-center justify-center rounded-xl bg-white/10">
                   <Icon className="size-6" />
                 </span>
                 <h3 className="mt-5 text-xl font-semibold text-white">

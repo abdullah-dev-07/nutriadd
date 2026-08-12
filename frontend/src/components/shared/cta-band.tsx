@@ -44,7 +44,7 @@ export function CtaBand({
               <Button
                 asChild
                 size="lg"
-                className="text-brand-blue bg-card hover:bg-card/90"
+                className="text-brand-blue bg-white hover:bg-white/90"
               >
                 <Link to={primary.to}>
                   {primary.label}
@@ -56,7 +56,7 @@ export function CtaBand({
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-white/40 bg-transparent text-white hover:bg-card/10"
+                  className="border-white/40 bg-transparent text-white hover:bg-white/10"
                 >
                   <Link to={secondary.to}>{secondary.label}</Link>
                 </Button>
