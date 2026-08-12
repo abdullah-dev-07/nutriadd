@@ -139,7 +139,7 @@ export function ChatWidget() {
           'fixed right-4 bottom-4 z-60 flex items-center justify-center transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:outline-none sm:right-6 sm:bottom-6',
           open
             ? 'bg-brand-blue size-14 rounded-full shadow-lg'
-            : 'size-16 rounded-full drop-shadow-lg'
+            : 'size-20 rounded-full drop-shadow-lg'
         )}
       >
         {open ? (
@@ -148,9 +148,9 @@ export function ChatWidget() {
           <img
             src={chatbotIcon}
             alt=""
-            width={64}
-            height={64}
-            className="size-16 object-contain"
+            width={80}
+            height={80}
+            className="size-20 object-contain"
           />
         )}
       </button>
