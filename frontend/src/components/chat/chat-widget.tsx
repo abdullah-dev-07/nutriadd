@@ -139,7 +139,7 @@ export function ChatWidget() {
           'fixed right-4 bottom-4 z-60 flex items-center justify-center transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:outline-none sm:right-6 sm:bottom-6',
           open
             ? 'bg-brand-blue size-14 rounded-full shadow-lg'
-            : 'size-20 rounded-full drop-shadow-lg'
+            : '<size-24></size-24> rounded-full drop-shadow-lg'
         )}
       >
         {open ? (
