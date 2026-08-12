@@ -16,9 +16,9 @@ function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'light'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light'
+  // Default first-time visitors to light regardless of their OS setting; only an
+  // explicit toggle (persisted in localStorage) switches to dark.
+  return 'light'
 }
 
 type ThemeContextValue = {
