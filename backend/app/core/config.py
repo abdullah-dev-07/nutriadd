@@ -71,6 +71,17 @@ class Settings(BaseSettings):
             return json.loads(stripped)
         return [origin.strip() for origin in stripped.split(",") if origin.strip()]
 
+    # Chatbot (DeepSeek — OpenAI-compatible API). The key comes from env only,
+    # never hardcoded. When DEEPSEEK_API_KEY is empty the /chat endpoint returns a
+    # graceful "assistant unavailable" message instead of erroring, so the site
+    # runs fine locally/without a key configured.
+    DEEPSEEK_API_KEY: str = ""
+    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
+    DEEPSEEK_MODEL: str = "deepseek-chat"
+    # Per-IP rate limit for the public /chat endpoint, to protect the free-tier
+    # API quota from spam/abuse. Effective limit is per Gunicorn worker.
+    CHAT_RATE_LIMIT_PER_MINUTE: int = 12
+
     # App
     PROJECT_NAME: str = "NutriAdd API"
     API_V1_PREFIX: str = "/api/v1"

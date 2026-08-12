@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 
+import { ChatWidget } from '@/components/chat/chat-widget'
 import { PageLoader } from '@/components/shared/page-loader'
 import { ScrollToTop } from '@/components/shared/scroll-to-top'
 
@@ -24,6 +25,7 @@ export function Layout() {
         </Suspense>
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   )
 }

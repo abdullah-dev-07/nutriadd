@@ -1,30 +1,14 @@
-import climag from '@/assets/climag.jpeg'
-import kal3 from '@/assets/kal-3.jpeg'
-import magtein from '@/assets/magtein.jpeg'
-import nisavit from '@/assets/nisavit.jpeg'
 import nutriaddLogo from '@/assets/nutriadd-logo.jpg'
-import qazplus from '@/assets/qazplus.png'
-import trig from '@/assets/trig.jpeg'
-import vikinD from '@/assets/vikin-d.jpeg'
-
-export const productImages: Record<string, string> = {
-  magtein,
-  climag,
-  'kal-3': kal3,
-  nisavit,
-  trig,
-  'vikin-d': vikinD,
-  qazplus,
-}
 
 /**
- * Resolve the image to display for a product. In production the API returns an
- * absolute Azure Blob Storage URL, which is used directly. When that URL is empty
- * (e.g. local dev before Blob Storage is wired up) we fall back to the bundled
- * asset matched by slug, and finally to the NutriAdd logo.
+ * Resolve the image to display for a product.
+ *
+ * In production the API returns an absolute URL for `image_url` (product media is
+ * served from the VPS at /media/..., not bundled into the frontend), which is used
+ * directly. Product images are intentionally NOT bundled in the codebase — when a
+ * product has no usable `image_url` we fall back to the NutriAdd logo placeholder.
  */
-export function getProductImage(imageUrl: string, slug?: string): string {
+export function getProductImage(imageUrl: string, _slug?: string): string {
   if (imageUrl && /^https?:\/\//.test(imageUrl)) return imageUrl
-  if (slug && productImages[slug]) return productImages[slug]
   return nutriaddLogo
 }
