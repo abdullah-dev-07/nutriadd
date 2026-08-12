@@ -21,6 +21,16 @@ old one:
         --new-email new-admin@example.com --new-name "New Admin" \
         --old-email old-admin@example.com
 
+Guard an existing admin, and fully remove an old one safely:
+
+    # Confirm an account exists, is active, and is an admin (exits non-zero if not):
+    python -m scripts.manage_admin verify-admin --email keep-admin@example.com
+
+    # Remove an old account. It is HARD-DELETED only if it owns no orders;
+    # if it owns orders, it is instead deactivated + demoted so order history
+    # is preserved (see the FK-safety note in `remove`).
+    python -m scripts.manage_admin remove --email old-admin@example.com
+
 Notes:
 - Idempotent: re-running `create-admin` on an existing email promotes that user
   to admin (and updates the password only if you pass --set-password).
@@ -33,10 +43,11 @@ import getpass
 import logging
 import sys
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.core.security import hash_password
 from app.db.base import AsyncSessionLocal
+from app.models.order import Order
 from app.models.user import User, UserRole
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -120,6 +131,83 @@ async def demote(email: str) -> None:
         logger.info("Demoted %s from admin to regular user.", email)
 
 
+async def _order_count(db, user_id) -> int:
+    result = await db.execute(
+        select(func.count()).select_from(Order).where(Order.user_id == user_id)
+    )
+    return int(result.scalar_one())
+
+
+async def verify_admin(email: str) -> None:
+    """Confirm a user exists, is active, and is an admin. Exits non-zero if not,
+    so it can be used as a precondition/guard before making other changes."""
+    async with AsyncSessionLocal() as db:
+        user = await _get_by_email(db, email)
+        if user is None:
+            logger.error("VERIFY FAILED: no account for %s.", email)
+            sys.exit(1)
+        problems = []
+        if not user.is_active:
+            problems.append("account is INACTIVE")
+        if user.role != UserRole.admin:
+            problems.append(f"role is '{user.role.value}', not admin")
+        if problems:
+            logger.error("VERIFY FAILED for %s: %s.", email, "; ".join(problems))
+            sys.exit(1)
+        logger.info(
+            "VERIFY OK: %s (%s) exists, is active, and is an admin.",
+            email,
+            user.full_name,
+        )
+
+
+async def remove(email: str) -> None:
+    """Safely remove an account.
+
+    Idempotent: if the account is already gone, reports that and exits cleanly.
+
+    Foreign-key safety: `orders.user_id` is ON DELETE RESTRICT and carries no ORM
+    cascade, so an account that owns orders CANNOT and MUST NOT be hard-deleted —
+    doing so would either fail the constraint or (if the schema changed) destroy
+    business/order history. In that case we refuse the delete and instead
+    deactivate + demote the account, preserving all order records while removing
+    its access. Accounts with zero orders are hard-deleted; their addresses and
+    cart rows fall away automatically via ON DELETE CASCADE.
+    """
+    async with AsyncSessionLocal() as db:
+        user = await _get_by_email(db, email)
+        if user is None:
+            logger.info("%s does not exist — nothing to remove (already gone).", email)
+            return
+
+        orders = await _order_count(db, user.id)
+        if orders > 0:
+            # Preserve order history — deactivate + demote instead of deleting.
+            changed = user.is_active or user.role == UserRole.admin
+            user.is_active = False
+            user.role = UserRole.user
+            await db.commit()
+            logger.warning(
+                "%s owns %d order(s), so it was NOT deleted (that would destroy "
+                "order history). Instead it was deactivated and demoted to a "
+                "regular user — it can no longer log in or access admin. %s",
+                email,
+                orders,
+                "Applied changes." if changed else "Already deactivated/demoted.",
+            )
+            logger.warning(
+                "If you truly need it fully gone, reassign or archive its %d "
+                "order(s) first, then re-run this command.",
+                orders,
+            )
+            return
+
+        # No orders → safe hard delete (addresses/cart cascade away).
+        await db.delete(user)
+        await db.commit()
+        logger.info("Removed %s completely from the system (owned no orders).", email)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Manage NutriAdd admin accounts.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -143,6 +231,18 @@ def main() -> None:
     p_swap.add_argument("--new-name", default="Administrator")
     p_swap.add_argument("--old-email", required=True)
 
+    p_verify = sub.add_parser(
+        "verify-admin", help="Confirm a user exists, is active, and is an admin."
+    )
+    p_verify.add_argument("--email", required=True)
+
+    p_remove = sub.add_parser(
+        "remove",
+        help="Safely remove an account (hard-delete if it owns no orders; "
+        "otherwise deactivate + demote to preserve order history).",
+    )
+    p_remove.add_argument("--email", required=True)
+
     args = parser.parse_args()
 
     if args.command == "list":
@@ -162,6 +262,13 @@ def main() -> None:
         password = _prompt_password()
         asyncio.run(create_admin(args.new_email, args.new_name, password))
         asyncio.run(demote(args.old_email))
+        asyncio.run(list_admins())
+
+    elif args.command == "verify-admin":
+        asyncio.run(verify_admin(args.email))
+
+    elif args.command == "remove":
+        asyncio.run(remove(args.email))
         asyncio.run(list_admins())
 
 
